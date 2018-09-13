@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPM.API", "MPM.API\MPM.API.csproj", "{60D47094-8054-4C7C-8057-053037D01125}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPM.API", "MPM.API\MPM.API.csproj", "{60D47094-8054-4C7C-8057-053037D01125}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPM.Databases", "MPM.Databases\MPM.Databases.csproj", "{19739824-8C2B-4D62-803C-CAB6E5564670}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPM.Repository", "MPM.Repository\MPM.Repository.csproj", "{04D19028-225A-4EC2-B456-24DF59E6CB4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{60D47094-8054-4C7C-8057-053037D01125}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60D47094-8054-4C7C-8057-053037D01125}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60D47094-8054-4C7C-8057-053037D01125}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19739824-8C2B-4D62-803C-CAB6E5564670}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19739824-8C2B-4D62-803C-CAB6E5564670}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19739824-8C2B-4D62-803C-CAB6E5564670}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19739824-8C2B-4D62-803C-CAB6E5564670}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04D19028-225A-4EC2-B456-24DF59E6CB4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04D19028-225A-4EC2-B456-24DF59E6CB4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04D19028-225A-4EC2-B456-24DF59E6CB4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04D19028-225A-4EC2-B456-24DF59E6CB4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

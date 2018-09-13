@@ -12,4 +12,9 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MPM.Databases\MPM.Databases.csproj" />
+    <ProjectReference Include="..\MPM.Repository\MPM.Repository.csproj" />
+  </ItemGroup>
+
 </Project>
