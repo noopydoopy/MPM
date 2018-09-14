@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import User from '@/views/User'
+import ManagePriority from '@/views/ManagePriority'
+import ManageProject from '@/views/ManageProject'
 import Profile from '@/components/User/Profile'
 
 Vue.use(Router)
@@ -20,6 +22,16 @@ export default new Router({
         path: '/login',
         name: 'login',
         component: Login
+    },
+    {
+      path: '/ManagePriority',
+      name: 'ManagePriority',
+      component: ManagePriority
+    },
+    {
+      path: '/ManageProject',
+      name: 'ManageProject',
+      component: ManageProject
     },
     {
         path: '/user/:mode',
