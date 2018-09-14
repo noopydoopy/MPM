@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using MPM.Databases.Models;
 using MPM.Repository;
 using MPM.Repository.Interfaces;
+using NJsonSchema;
+using NSwag.AspNetCore;
+using System.Reflection;
 
 namespace MPM.API
 {
@@ -28,6 +31,7 @@ namespace MPM.API
             services.AddDbContext<mpmContext>(options => options.UseSqlServer(connection));
 
             services.AddScoped<IPriorityRepository, PriorityRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IUserProjectRepository, UserProjectRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
@@ -47,6 +51,14 @@ namespace MPM.API
             }
 
             app.UseHttpsRedirection();
+
+            // Enable the Swagger UI middleware and the Swagger generator
+            app.UseSwaggerUi(typeof(Startup).GetTypeInfo().Assembly, settings =>
+            {
+                settings.GeneratorSettings.DefaultPropertyNameHandling =
+                    PropertyNameHandling.CamelCase;
+            });
+
             app.UseMvc();
         }
     }
