@@ -31,6 +31,11 @@ export default {
             this.component = 'user-list'
         }
         else if(this.$route.params.mode === 'update'){
+     /*       this.$http.get('/api/Users/' + this.$route.query).then(response => {
+                console.log(response)
+            }, error => {
+                console.log(error)
+            })*/
             this.component = 'user-detail-update'
         }
     }

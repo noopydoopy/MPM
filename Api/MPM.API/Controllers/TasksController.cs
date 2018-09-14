@@ -7,11 +7,11 @@ namespace MPM.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TaskController : ControllerBase
+    public class TasksController : ControllerBase
     {
         private readonly ITaskRepository taskRepository;
 
-        public TaskController(ITaskRepository context)
+        public TasksController(ITaskRepository context)
         {
             taskRepository = context;
         }
