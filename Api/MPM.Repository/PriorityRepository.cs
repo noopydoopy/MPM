@@ -1,4 +1,5 @@
-﻿using MPM.Databases.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MPM.Databases.Models;
 using MPM.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,29 @@ namespace MPM.Repository
 
         public void AddPriority(Priority session)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.Priority.Add(session);
+                _context.SaveChanges();
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public void DeletePriority(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var currentPriority = _context.Priority.Find(id);
+                _context.Priority.Remove(currentPriority);
+                _context.SaveChanges();
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public List<Priority> GetAllPrioritys()
@@ -32,12 +50,20 @@ namespace MPM.Repository
 
         public Priority GetPriorityByID(int id)
         {
-            throw new NotImplementedException();
+            return _context.Priority.Find(id);
         }
 
         public void UpdatePriority(Priority session)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.Entry(session).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }
