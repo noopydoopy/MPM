@@ -32,7 +32,7 @@ namespace MPM.API.Controllers
 
         //INSERT
         [Route("insert")]
-        public async System.Threading.Tasks.Task<IActionResult> AddTask([FromBody] Task task)
+        public IActionResult AddTask([FromBody] Task task)
         {
             if (!ModelState.IsValid)
             {
@@ -41,12 +41,12 @@ namespace MPM.API.Controllers
 
             taskRepository.AddTask(task);
 
-            return CreatedAtAction("GetPriority", new { id = task.TaskId }, task);
+            return CreatedAtAction("GetTaskByID", new { id = task.PriorityId }, task);
         }
 
         //DELETE
         [Route("delete")]
-        public async System.Threading.Tasks.Task<IActionResult> DeleteTask(int id)
+        public IActionResult DeleteTask(int id)
         {
             if (!ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace MPM.API.Controllers
 
         //UPDATE
         [Route("update")]
-        public async System.Threading.Tasks.Task<IActionResult> PutTask([FromBody]Task task)
+        public IActionResult PutTask([FromBody]Task task)
         {
             if (!ModelState.IsValid)
             {
