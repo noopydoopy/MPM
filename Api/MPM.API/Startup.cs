@@ -28,6 +28,8 @@ namespace MPM.API
             services.AddDbContext<mpmContext>(options => options.UseSqlServer(connection));
 
             services.AddScoped<IPriorityRepository, PriorityRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<ITypeRepository, TypeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
