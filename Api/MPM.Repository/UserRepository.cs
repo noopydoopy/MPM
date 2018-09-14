@@ -7,20 +7,20 @@ using System.Linq;
 
 namespace MPM.Repository
 {
-    public class PriorityRepository : IPriorityRepository
+    public class UserRepository : IUserRepository
     {
         private readonly mpmContext _context;
 
-        public PriorityRepository(mpmContext context)
+        public UserRepository(mpmContext context)
         {
             _context = context;
         }
 
-        public void AddPriority(Priority session)
+        public void AddUser(User user)
         {
             try
             {
-                _context.Priority.Add(session);
+                _context.User.Add(user);
                 _context.SaveChanges();
             }
             catch
@@ -29,12 +29,12 @@ namespace MPM.Repository
             }
         }
 
-        public void DeletePriority(int id)
+        public void DeleteUser(int userId)
         {
             try
             {
-                var currentPriority = _context.Priority.Find(id);
-                _context.Priority.Remove(currentPriority);
+                var currentUser = _context.User.Find(userId);
+                _context.User.Remove(currentUser);
                 _context.SaveChanges();
             }
             catch
@@ -43,21 +43,21 @@ namespace MPM.Repository
             }
         }
 
-        public List<Priority> GetAllPrioritys()
+        public List<User> GetAllUsers()
         {
-            return _context.Priority.ToList();
+            return _context.User.ToList();
         }
 
-        public Priority GetPriorityByID(int id)
+        public User GetUserById(int userId)
         {
-            return _context.Priority.Find(id);
+            return _context.User.Find(userId);
         }
 
-        public void UpdatePriority(Priority session)
+        public void UpdateUser(User user)
         {
             try
             {
-                _context.Entry(session).State = EntityState.Modified;
+                _context.Entry(user).State = EntityState.Modified;
                 _context.SaveChanges();
             }
             catch

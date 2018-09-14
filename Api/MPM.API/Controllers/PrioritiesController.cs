@@ -49,7 +49,7 @@ namespace MPM.API.Controllers
 
         // PUT: api/Priorities/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPriority([FromRoute] int id, [FromBody] Priority priority)
+        public IActionResult PutPriority([FromRoute] int id, [FromBody] Priority priority)
         {
             if (!ModelState.IsValid)
             {
@@ -68,7 +68,7 @@ namespace MPM.API.Controllers
 
         // POST: api/Priorities
         [HttpPost]
-        public async Task<IActionResult> PostPriority([FromBody] Priority priority)
+        public IActionResult PostPriority([FromBody] Priority priority)
         {
             if (!ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace MPM.API.Controllers
 
         // DELETE: api/Priorities/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePriority([FromRoute] int id)
+        public IActionResult DeletePriority([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
