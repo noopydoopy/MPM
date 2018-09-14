@@ -30,6 +30,8 @@ namespace MPM.API
             services.AddScoped<IPriorityRepository, PriorityRepository>();
             services.AddScoped<IUserProjectRepository, UserProjectRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<ITypeRepository, TypeRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
