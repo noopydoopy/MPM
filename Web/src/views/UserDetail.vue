@@ -24,6 +24,16 @@
                                         type="password"
                                         v-model="form.password"
                                         required
+                                        placeholder="Enter password">
+                            </b-form-input>
+                        </b-form-group>
+                        <b-form-group id="Name"
+                                        label="Name:"
+                                        label-for="name">
+                            <b-form-input id="name"
+                                        type="name"
+                                        v-model="form.name"
+                                        required
                                         placeholder="Enter name">
                             </b-form-input>
                         </b-form-group>

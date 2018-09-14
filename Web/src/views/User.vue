@@ -11,11 +11,13 @@
 
 import Profile from '@/components/User/Profile'
 import UserList from '@/components/User/UserList'
+import UserDetailUpdate from '@/components/User/UserDetailUpdate'
 
 export default {
     components: {
         Profile,
-        UserList
+        UserList,
+        UserDetailUpdate
     },
     data: () => ({
         component: 'profile'
@@ -27,6 +29,9 @@ export default {
         }
         else if(this.$route.params.mode === 'list'){
             this.component = 'user-list'
+        }
+        else if(this.$route.params.mode === 'update'){
+            this.component = 'user-detail-update'
         }
     }
 }
