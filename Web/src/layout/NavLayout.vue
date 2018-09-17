@@ -10,8 +10,16 @@
 
                 <b-navbar-nav >
                 <b-nav-item href="#"><router-link to="/">Home</router-link> </b-nav-item>
+                <b-nav-item href="#"><router-link to="/dashboard">Dashboard</router-link> </b-nav-item>
                 <b-nav-item href="#"><router-link to="/about">About</router-link></b-nav-item>
                 <b-nav-item href="#"><router-link to="/user/list">Users</router-link></b-nav-item>
+                <b-nav-item-dropdown>
+                    <template slot="button-content">
+                        Administrator
+                    </template>
+                    <b-dropdown-item href="#"><router-link to="/admin/manageuser">Manage User</router-link></b-dropdown-item>
+                    <b-dropdown-item href="#"><router-link to="/admin/managetype">Manage Type</router-link></b-dropdown-item>
+                </b-nav-item-dropdown>
                 </b-navbar-nav>
 
                 <!-- Right aligned nav items -->
