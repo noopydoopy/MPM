@@ -6,6 +6,9 @@ import User from '@/views/User'
 import ManagePriority from '@/views/ManagePriority'
 import ManageProject from '@/views/ManageProject'
 import Profile from '@/components/User/Profile'
+import ManageUser from '@/views/ManageUser'
+import ManageType from '@/views/ManageType'
+import Dashboard from '@/views/Dashboard'
 
 Vue.use(Router)
 
@@ -37,6 +40,21 @@ export default new Router({
         path: '/user/:mode',
         name: 'user',
         component: User
+    },
+    {
+      path: '/admin/manageuser',
+      name: 'manageuser',
+      component: ManageUser
+    },
+    {
+      path: '/admin/managetype',
+      name: 'managetype',
+      component: ManageType
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: Dashboard
     },
     {
       path: '/about',
