@@ -26,6 +26,7 @@ namespace MPM.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddCors();
 
             var connection = Configuration.GetConnectionString("ConnectionString");
             services.AddDbContext<mpmContext>(options => options.UseSqlServer(connection));
@@ -49,6 +50,8 @@ namespace MPM.API
             {
                 app.UseHsts();
             }
+
+            app.UseCors(builder => builder.WithOrigins("*"));
 
             app.UseHttpsRedirection();
 
