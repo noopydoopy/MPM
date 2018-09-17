@@ -6,6 +6,7 @@ import User from '@/views/User'
 import ManagePriority from '@/views/ManagePriority'
 import ManageProject from '@/views/ManageProject'
 import Profile from '@/components/User/Profile'
+import TaskList from '@/views/TaskList'
 
 Vue.use(Router)
 
@@ -37,6 +38,11 @@ export default new Router({
         path: '/user/:mode',
         name: 'user',
         component: User
+    },
+    {
+        path: '/tasklist',
+        name: 'TaskList',
+        component: TaskList
     },
     {
       path: '/about',
