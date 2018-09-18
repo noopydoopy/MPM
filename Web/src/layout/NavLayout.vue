@@ -19,6 +19,7 @@
                     </template>
                     <b-dropdown-item href="#"><router-link to="/admin/manageuser">Manage User</router-link></b-dropdown-item>
                     <b-dropdown-item href="#"><router-link to="/admin/managetype">Manage Type</router-link></b-dropdown-item>
+                    <b-dropdown-item href="#"><router-link to="/admin/managepriority">Manage Priority</router-link></b-dropdown-item>
                 </b-nav-item-dropdown>
                 </b-navbar-nav>
 

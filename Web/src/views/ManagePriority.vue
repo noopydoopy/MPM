@@ -1,29 +1,64 @@
-<template>
-    <div>
+<template >
+    <div class="bg-light" >
         <nav-layout>
             <h1>Manage Priority</h1>
-            <div class="container">
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-4 col-md-offset-4">	
-					        <label class="col-sm-4 control-label">Priority Number: </label>
+
+            <div class="container mt-4 border-top border-bottom border-secondary" id="Edit Zone" v-show="ShowEdit">
+                <div class="row justify-content-md-center">
+                        <div class="col col-md-6">
+                        <b-alert variant="danger"
+                            dismissible
+                            :show="ShowSaveAlert"
+                            @dismissed="ShowSaveAlert=false">
+                            {{SaveResultMsg}}
+                        </b-alert>
                         </div>
-					    <div class="col-sm-8">
-						    <input v-model="PriorityNumber" type="number" style="width: 300px;">
+                    </div>
+                    
+                <div class="form-group">
+                    <div class="row justify-content-md-center mt-2">
+                        <div class="col col-lg-2">    
+                            <label class="float-left font-weight-bold" v-if="IsNew">Add New Priority</label>  
+                            <label class="float-left" v-else>Edit Priority</label>                 
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-md-center mt-2">
+                        <div class="col col-md-2">	
+					        <label class="float-right">Priority Number: </label>
+                        </div>
+					    <div class="col col-md-2 ">
+						    <input v-model="PriorityNumber" type="number" class="form-control" style="width: 300px;">
+                        </div>
+                        <div class="col col-md-2 ">
                         </div>
 					</div>
-                    <div class="row">  
-                            <div class="col-md-4 col-md-offset-4">
-                                <label class="col-sm-4 control-label">Color: </label>
+                    <div class="row justify-content-md-center mt-2">  
+                            <div class="col col-md-2">
+                                <label class="float-right">Color: </label>
                             </div>
-                            <div class="col-sm-8">
+                            <div class="col col-md-2">
                                 <color-picker-chrome :color="Color" v-model="Color" />
-					        </div>				            
+					        </div>	
+                            <div class="col col-md-2 ">
+                            </div>			            
+                    </div>
+                   
+                    <div class="row mt-2 float-center">
+                        <div class="col">
+                            <b-button variant="success" class="m-1" v-on:click="SavePriority">Save</b-button>
+                            <b-button variant="danger" class="m-1" v-on:click="ClosedPriority">Closed</b-button>
+                        </div>
                     </div>
                 </div>  
             </div>
-            <div class="table-priority"> 
-                <priority-list v-bind:PriorityListItem="PriorityListItem"></priority-list>
+             <div class="container">
+                <div class="row col col-md-2 col-md-push-10 float-right">
+                    <b-button variant="success" class="ml-2 mb-1 mt-5" v-show="!ShowEdit" v-on:click="AddPriority">Add new</b-button>
+                </div>
+                <div class="row col justify-content-md-center ">
+                    <priority-list v-bind:PriorityListItem="PriorityListItem" style="width:95%"></priority-list>
+                </div>               
             </div>
         </nav-layout>
     </div>
@@ -53,12 +88,12 @@ export default {
             Color:null,
             PriorityListItem: [],
             ApiHost: 'https://localhost:44382',
+            ShowEdit:false,
+            IsNew : false,
+            ShowSaveAlert : false,
+            SaveResultMsg : null,
         };
-    },
-    beforeMount(){
-        
-    },
-    
+    },    
     methods:
     {
         loadPriority()
@@ -67,11 +102,78 @@ export default {
             var vm = this;
              axios.get(url)
                 .then(function (response) {
-                    console.log(response.data);
                     vm.PriorityListItem = response.data;
                 });
+        },
+        AddNewPriority: function(pNumber,pColor)
+        {
+            const url = this.ApiHost +'/api/Priorities';
+            const config = {
+            headers: {              
+                'Content-Type': 'application/json',
+                }
+             }
+             var querystring = require('querystring');
+            const requestBody = {
+                PriorityNumber: pNumber,
+                Color: pColor
+            }
+            var vm = this;
+            axios.post(url,querystring.stringify(requestBody),config).then(result => 
+                    {
+                        vm.ClosedPriority();
+                        vm.loadPriority();
+                    }
+            ).catch(e => {
+                    vm.SetResultMsg(true,'Error: ' + e);
+                });        
+        },
+        ClosedPriority()
+        {
+            this.ShowEdit = false;
+            this.PriorityId = null;
+            this.PriorityNumber = null;
+            this.Color = null;
+            this.SetResultMsg(false,'');
+        },
+        SavePriority()
+        {
+            if(this.PriorityNumber != null && this.PriorityNumber !=='')
+            {
+                if(this.PriorityNumber <= 0)
+                {
+                    this.SetResultMsg(true,'Priority Number must greater than 0')
+                    
+                }
+                else
+                {
+                    this.AddNewPriority(this.PriorityNumber,this.Color);
+                }
+            }
+            else
+            {
+                this.SetResultMsg(true,'Priority Number is empty!')
+            }
+        },
+        SetResultMsg : function(show,msg)
+        {
+                this.ShowSaveAlert = show;
+                this.SaveResultMsg = msg;
+        },
+        AddPriority()
+        {
+            this.PriorityId = null;
+            this.PriorityNumber = null;
+            this.Color = null;
+            this.ShowEdit = true;   
+            this.IsNew = true;         
         }
+
     }
 
 }
 </script>
+<style scoped>
+
+</style>
+

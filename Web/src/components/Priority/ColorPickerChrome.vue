@@ -1,8 +1,8 @@
 <template>
     <div class="input-group color-picker" ref="colorpicker">
-	    <input type="text" class="form-control" v-model="colorValue" @focus="showPicker()" @input="updateFromInput" />
+	    <input type="text" class="form-control color-textbox" v-model="colorValue" @focus="showPicker()" @input="updateFromInput" />
 	    <span class="input-group-addon color-picker-container">
-		    <span class="current-color" :style="'background-color: ' + colorValue" @click="togglePicker()"></span>
+		    <span class="current-color form-control" :style="'background-color: ' + colorValue" @click="togglePicker()"></span>
 		    <chrome-picker :value="colors" @input="updateFromPicker" v-if="displayPicker" />
 	    </span>
     </div>
@@ -105,10 +105,11 @@ h1 {
 }
 .current-color {
 	display: inline-block;
-	width: 16px;
-	height: 16px;
+	width: 38px;
+	height: 38px;
 	background-color: #000;
 	cursor: pointer;
+	margin-left: 3px;
 }
 .footer {
 	margin-top: 20px;

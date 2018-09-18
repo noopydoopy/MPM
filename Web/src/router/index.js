@@ -28,12 +28,12 @@ export default new Router({
       component: Login
     },
     {
-      path: '/ManagePriority',
+      path: '/admin/managepriority',
       name: 'ManagePriority',
       component: ManagePriority
     },
     {
-      path: '/ManageProject',
+      path: '/manageproject',
       name: 'ManageProject',
       component: ManageProject
     },
