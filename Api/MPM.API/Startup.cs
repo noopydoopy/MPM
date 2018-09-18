@@ -51,7 +51,10 @@ namespace MPM.API
                 app.UseHsts();
             }
 
-            app.UseCors(builder => builder.WithOrigins("*"));
+            app.UseCors(builder => builder.WithOrigins("*")
+                                    .AllowAnyOrigin()
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod());
 
             app.UseHttpsRedirection();
 

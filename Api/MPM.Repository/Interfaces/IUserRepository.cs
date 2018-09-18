@@ -9,6 +9,7 @@ namespace MPM.Repository.Interfaces
     {
         List<User> GetAllUsers();
         User GetUserById(int userId);
+        User GetUserByCode(String code);
         void AddUser(User user);
         void UpdateUser(User user);
         void DeleteUser(int userId);

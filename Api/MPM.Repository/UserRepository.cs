@@ -53,6 +53,15 @@ namespace MPM.Repository
             return _context.User.Find(userId);
         }
 
+        public User GetUserByCode(String code)
+        {
+            var query = from User in _context.User
+                        where User.Code == code
+                        select User;
+            User user = query.FirstOrDefault();
+            return user;
+        }
+
         public void UpdateUser(User user)
         {
             try

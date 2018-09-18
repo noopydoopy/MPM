@@ -5,7 +5,7 @@
             <b-card class="text-left">
                 <b-card-header>User Detail</b-card-header>
                 <b-card-body>
-                    <b-form @submit="onSubmit" @reset="onReset" >
+                    <b-form>
                         <b-form-group id="Email"
                                         label="Email address:"
                                         label-for="email">
@@ -26,6 +26,16 @@
                                         placeholder="Enter password">
                             </b-form-input>
                         </b-form-group>
+                        <b-form-group id="Confirm Password"
+                                        label="Confirm Password:"
+                                        label-for="cpassword">
+                            <b-form-input id="cpassword"
+                                        type="password"
+                                        v-model="form.cpassword"
+                                        required
+                                        placeholder="Confirm password">
+                            </b-form-input>
+                        </b-form-group>
                         <b-form-group id="Name"
                                         label="Name:"
                                         label-for="name">
@@ -35,9 +45,8 @@
                                         placeholder="Enter name">
                             </b-form-input>
                         </b-form-group>
-                        <b-button type="submit" size="sm" variant="primary">Submit</b-button> 
+                        <b-button type="button" @click="onSubmit" size="sm" variant="primary">Submit</b-button> 
                         <span style="margin-left:10px;"></span>
-                        <b-button type="reset" size="sm" variant="danger">Reset</b-button>
                         </b-form>
                 </b-card-body>
             </b-card>
@@ -48,24 +57,35 @@
 
 <script>
 export default {
-  data: () => ({
-    form: {
-      email: null,
-      password: null,
-      name: null
-    }
-  }),
+  props: ["user"],
+  data: function() {
+    return {
+      form: {
+        email: this.user.email,
+        password: null,
+        cpassword: null,
+        name: this.user.name
+      }
+    };
+  },
   methods: {
-    onSubmit(evt) {
-      evt.preventDefault();
-      alert(JSON.stringify(this.form));
-      this.$router.push({ path: "/" });
+    onSubmit() {
+      if (this.validateForm()) {
+        this.user.email = this.form.email;
+        this.user.password = this.form.password;
+        this.user.name = this.form.name;
+        this.user.isActive = true;
+        this.$emit('active-user', this.user);
+      } else {
+        alert("data fail");
+      }
     },
-    onReset(evt) {
-      evt.preventDefault();
-      this.form.email = null;
-      this.form.password = null;
-      this.form.name = null;
+    validateForm() {
+      if (this.form.password == this.form.cpassword) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 };
