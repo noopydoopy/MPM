@@ -13,8 +13,14 @@
                 </template>
                  
                 <template slot="action" slot-scope="row">
-                    <b-button variant="success sm" class="btn-edit mr-1" size="sm" @click.stop="deletePriority(row.index)">Edit</b-button>
-                    <b-button variant="danger sm" class="btn-delete mr-1" size="sm" @click.stop="deletePriority(row.index)">Remove</b-button>
+                    <b-button v-show="!ShowEdit" variant="success sm" class="btn-edit mr-1" size="sm" @click.stop="$emit('EditPriorityItem', row.item)">Edit</b-button>
+                    <b-button variant="danger sm" v-b-modal.confirmDeleteModal class="btn-delete mr-1" size="sm" >Remove</b-button>
+                    <b-modal id="confirmDeleteModal"
+                        ref="modal"
+                        title="Confirm Remove"
+                        @ok="$emit('DeletePriorityItem', row.item)">
+                            Do you sure to Remove Priority "{{row.item.priorityNumber}}" ?
+                    </b-modal>
                 </template>
             </b-table>
         </template>
@@ -24,7 +30,7 @@
 export default {
 
     Name:'priority-list',
-    props: ['PriorityListItem'],
+    props: ['PriorityListItem','ShowEdit'],
     data: function () {
         return {
             TableHeader: [ 'priorityId','priorityNumber', 'color','action' ],
@@ -32,10 +38,7 @@ export default {
     },
     methods:
     {
-            deletePriority(index)
-            {
-
-            }
+          
     }
 }
 </script>

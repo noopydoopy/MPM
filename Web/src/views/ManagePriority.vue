@@ -3,7 +3,7 @@
         <nav-layout>
             <h1>Manage Priority</h1>
 
-            <div class="container mt-4 border-top border-bottom border-secondary" id="Edit Zone" v-show="ShowEdit">
+            <div class="container mt-4 border-top border-bottom border-secondary" id="Edit Zone" v-if="ShowEdit">
                 <div class="row justify-content-md-center">
                         <div class="col col-md-6">
                         <b-alert variant="danger"
@@ -57,7 +57,7 @@
                     <b-button variant="success" class="ml-2 mb-1 mt-5" v-show="!ShowEdit" v-on:click="AddPriority">Add new</b-button>
                 </div>
                 <div class="row col justify-content-md-center ">
-                    <priority-list v-bind:PriorityListItem="PriorityListItem" style="width:95%"></priority-list>
+                    <priority-list v-bind:PriorityListItem="PriorityListItem" v-bind:ShowEdit="ShowEdit" @EditPriorityItem="EditPriority" @DeletePriorityItem="DeletePriority" style="width:95%"></priority-list>
                 </div>               
             </div>
         </nav-layout>
@@ -77,7 +77,6 @@ export default {
     },
 
     mounted() {
-        console.log(this.$route.path)
         this.$emit('page-change', this.$route.name)
         this.loadPriority();
     },
@@ -128,6 +127,69 @@ export default {
                     vm.SetResultMsg(true,'Error: ' + e);
                 });        
         },
+        UpdatePriority: function(pId,pNumber,pColor)
+        {
+            const url = this.ApiHost +'/api/Priorities/'+pId;
+            const config = {
+            headers: {              
+                'Content-Type': 'application/json',
+                }
+             }
+             var querystring = require('querystring');
+            const requestBody = {
+                PriorityId:pId,
+                PriorityNumber: pNumber,
+                Color: pColor
+            }
+            var vm = this;
+            axios.put(url,querystring.stringify(requestBody),config).then(result => 
+                    {
+                        vm.ClosedPriority();
+                        vm.loadPriority();
+                    }
+            ).catch(e => {
+                    vm.SetResultMsg(true,'Error: ' + e);
+                });        
+        },
+        DeletePriorityData(pId)
+        {
+             const url = this.ApiHost +'/api/Priorities/'+pId;
+            
+            var vm = this;
+            axios.delete(url).then(result => 
+                    {
+                        vm.loadPriority();
+                    }
+            ).catch(e => {
+                    vm.SetResultMsg(true,'Error: ' + e);
+                });  
+        },
+        AddPriority()
+        {
+            this.PriorityId = null;
+            this.PriorityNumber = null;
+            this.Color = null;
+            this.ShowEdit = true;   
+            this.IsNew = true;         
+        },
+        DeletePriority(priority)
+        {
+             if(priority!=null)
+            {
+                this.DeletePriorityData(priority.priorityId);
+            }
+        },
+        EditPriority(priority)
+        {
+            if(priority!=null)
+            {
+                this.PriorityId = priority.priorityId;
+                this.PriorityNumber = priority.priorityNumber;
+                this.Color = priority.color;
+                this.ShowEdit = true;   
+                this.IsNew = false;  
+            }     
+        },
         ClosedPriority()
         {
             this.ShowEdit = false;
@@ -147,7 +209,10 @@ export default {
                 }
                 else
                 {
-                    this.AddNewPriority(this.PriorityNumber,this.Color);
+                    if(this.IsNew)
+                        this.AddNewPriority(this.PriorityNumber,this.Color);
+                    else
+                        this.UpdatePriority(this.PriorityId,this.PriorityNumber,this.Color);
                 }
             }
             else
@@ -160,14 +225,7 @@ export default {
                 this.ShowSaveAlert = show;
                 this.SaveResultMsg = msg;
         },
-        AddPriority()
-        {
-            this.PriorityId = null;
-            this.PriorityNumber = null;
-            this.Color = null;
-            this.ShowEdit = true;   
-            this.IsNew = true;         
-        }
+       
 
     }
 
