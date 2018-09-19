@@ -14,9 +14,9 @@
                  
                 <template slot="action" slot-scope="row">
                     <b-button v-show="!ShowEdit" variant="success sm" class="btn-edit mr-1" size="sm" @click.stop="$emit('EditPriorityItem', row.item)">Edit</b-button>
-                    <b-button variant="danger sm" v-b-modal.confirmDeleteModal class="btn-delete mr-1" size="sm" >Remove</b-button>
+                    <b-button variant="danger sm" class="btn-delete mr-1" size="sm" @click="ShowCofirmBox" >Remove</b-button>
                     <b-modal id="confirmDeleteModal"
-                        ref="modal"
+                        ref="modalRef"
                         title="Confirm Remove"
                         @ok="$emit('DeletePriorityItem', row.item)">
                             Do you sure to Remove Priority "{{row.item.priorityNumber}}" ?
@@ -38,7 +38,10 @@ export default {
     },
     methods:
     {
-          
+          ShowCofirmBox :function()
+          {
+                this.$refs.modalRef.show()
+          }
     }
 }
 </script>
