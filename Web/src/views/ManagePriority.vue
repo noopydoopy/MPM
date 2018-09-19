@@ -112,19 +112,19 @@ export default {
                 'Content-Type': 'application/json',
                 }
              }
-             var querystring = require('querystring');
             const requestBody = {
                 PriorityNumber: pNumber,
                 Color: pColor
             }
             var vm = this;
-            axios.post(url,querystring.stringify(requestBody),config).then(result => 
+            axios.post(url,requestBody,config).then(result => 
                     {
                         vm.ClosedPriority();
                         vm.loadPriority();
                     }
             ).catch(e => {
-                    vm.SetResultMsg(true,'Error: ' + e);
+                console.log(e);
+                    vm.SetResultMsg(true, e);
                 });        
         },
         UpdatePriority: function(pId,pNumber,pColor)
@@ -135,14 +135,13 @@ export default {
                 'Content-Type': 'application/json',
                 }
              }
-             var querystring = require('querystring');
             const requestBody = {
                 PriorityId:pId,
                 PriorityNumber: pNumber,
                 Color: pColor
             }
             var vm = this;
-            axios.put(url,querystring.stringify(requestBody),config).then(result => 
+            axios.put(url,requestBody,config).then(result => 
                     {
                         vm.ClosedPriority();
                         vm.loadPriority();

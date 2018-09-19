@@ -68,8 +68,10 @@ export default {
 				this.colorValue = color.hex;
 			}
 			else {
-				this.colorValue = 'rgba(' + color.rgba.r + ', ' + color.rgba.g + ', ' + color.rgba.b + ', ' + color.rgba.a + ')';
+
+				this.colorValue = color.hex8;
 			}
+			
 		},
 		documentClick(e) {
 			var el = this.$refs.colorpicker,
