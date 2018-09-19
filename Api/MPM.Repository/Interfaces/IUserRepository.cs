@@ -1,4 +1,5 @@
 ﻿using MPM.Databases.Models;
+using MPM.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,6 @@ namespace MPM.Repository.Interfaces
         void AddUser(User user);
         void UpdateUser(User user);
         void DeleteUser(int userId);
+        TokenModel Authenticate(string username, string password);
     }
 }

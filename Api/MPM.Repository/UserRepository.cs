@@ -1,19 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MPM.Databases.Models;
+using MPM.Helpers;
+using MPM.Model;
 using MPM.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 
 namespace MPM.Repository
 {
     public class UserRepository : IUserRepository
     {
         private readonly mpmContext _context;
+        private readonly AppSettings _appSettings;
 
-        public UserRepository(mpmContext context)
+        public UserRepository(mpmContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
+            _appSettings = appSettings.Value;
         }
 
         public void AddUser(User user)
@@ -73,6 +82,33 @@ namespace MPM.Repository
             {
                 throw;
             }
+        }
+
+        public TokenModel Authenticate(string username, string password)
+        {
+            var user = _context.User.SingleOrDefault(x => x.Email == username && x.Password == password);
+
+            if (user == null)
+                return null;
+
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.UserId.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            TokenModel tokenModel = new TokenModel();
+            tokenModel.Token = tokenHandler.WriteToken(token);
+
+            return tokenModel;
         }
     }
 }

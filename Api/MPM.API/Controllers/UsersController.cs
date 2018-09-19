@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -124,6 +125,17 @@ namespace MPM.API.Controllers
             userRepository.DeleteUser(id);
 
             return Ok(user);
+        }
+
+        [HttpPost("authentication")]
+        public IActionResult Authenticate([FromBody]User userParam)
+        {
+            var tokenModel = userRepository.Authenticate(userParam.Email, userParam.Password);
+
+            if (tokenModel == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(tokenModel);
         }
     }
 }

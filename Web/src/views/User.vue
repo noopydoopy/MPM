@@ -12,7 +12,7 @@ import Profile from "@/components/User/Profile";
 import UserList from "@/components/User/UserList";
 import UserDetailUpdate from "@/components/User/UserDetailUpdate";
 import UserDetailUpdateError from "@/components/User/UserDetailUpdateError";
-import axios from "axios";
+import userService from "@/api/UserService";
 
 export default {
   components: {
@@ -23,8 +23,7 @@ export default {
   },
   data: () => ({
     component: "profile",
-    user: {},
-    apiHost: "https://localhost:44382"
+    user: {}
   }),
   mounted() {
     console.log(this.$route.params.mode);
@@ -33,21 +32,19 @@ export default {
     } else if (this.$route.params.mode === "list") {
       this.component = "user-list";
     } else if (this.$route.params.mode === "update") {
-      var vm = this;
-      var param = this.$route.query.code;
-      const url = this.apiHost + "/api/Users/code/" + param;
-      axios.get(url).then(
-        function(response) {
-          vm.user = response.data;
-          if (vm.user.isActive == true) {
-            vm.$router.push({ path: "/login" });
+      var code = this.$route.query.code;
+      userService.getUserByCode(code).then(
+        response => {
+          this.user = response.data;
+          if (this.user.isActive == true) {
+            this.$router.push({ path: "/login" });
           } else {
-            vm.component = "user-detail-update";
+            this.component = "user-detail-update";
           }
         },
         error => {
           if (error.response.status == 404) {
-            vm.component = "user-detail-update-error";
+            this.component = "user-detail-update-error";
           }
         }
       );
@@ -55,16 +52,14 @@ export default {
   },
   methods: {
     activeUser: function(user) {
-      console.log("test");
-      const url = this.apiHost + "/api/Users/" + user.userId;
-      axios.put(url, user).then(
-        function(response) {
-          vm.$router.push({ path: "/login" });
+      userService.activeUser(user).then(
+        response => {
+          this.$router.push({ path: "/login" });
         },
         error => {
           console.log(error);
         }
-      );
+      )
     }
   }
 };
