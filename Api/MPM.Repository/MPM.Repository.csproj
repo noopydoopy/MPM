@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.4" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MPM.Databases\MPM.Databases.csproj" />
     <ProjectReference Include="..\MPM.Helpers\MPM.Helpers.csproj" />
     <ProjectReference Include="..\MPM.Model\MPM.Model.csproj" />

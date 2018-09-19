@@ -27,6 +27,9 @@
                                         placeholder="Enter name">
                             </b-form-input>
                         </b-form-group>
+                        <div class="invalid-feedback" v-if="!isLogin">
+                            The email or password you entered is incorrect.
+                        </div>
                         <b-form-group id="RememberMe">          
                             <b-form-checkbox v-model="remember">Remeber me</b-form-checkbox>              
                         </b-form-group>
@@ -56,19 +59,23 @@ export default {
       email: null,
       password: null
     },
-    remember: false
+    remember: false,
+    isLogin: false
   }),
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
       userService.logIn(this.user).then(
         response => {
+          this.isLogin = true
           if (response.data.token) {
             localStorage.setItem("token", response.data.token);
           }
           this.$router.push({ path: "/" });
         },
-        error => {}
+        error => {
+          this.isLogin = false
+          }
       );
     },
     onReset(evt) {

@@ -16,6 +16,9 @@ export default {
         var url = this.data().apiHost + "/api/Users/authentication"
         return axios.post(url, user);
     },
+    logOut() {
+        localStorage.removeItem('token');
+    },
     authHeader() {
         let token = localStorage.getItem('token');
     
