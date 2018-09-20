@@ -54,7 +54,7 @@
             </div>
              <div class="container">
                 <div class="row col col-md-2 col-md-push-10 float-right">
-                    <b-button variant="success" class="ml-2 mb-1 mt-5" v-show="!ShowEdit" v-on:click="AddPriority">Add new</b-button>
+                    <b-button variant="success" class="ml-2 mb-1 mt-5 btn-sm" v-show="!ShowEdit" v-on:click="AddPriority">Add new</b-button>
                 </div>
                 <div class="row col justify-content-md-center ">
                     <priority-list v-bind:PriorityListItem="PriorityListItem" v-bind:ShowEdit="ShowEdit" @EditPriorityItem="EditPriority" @DeletePriorityItem="DeletePriority" style="width:95%"></priority-list>

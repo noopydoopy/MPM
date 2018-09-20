@@ -30,7 +30,20 @@
                     </div>
                 </div>
                 <div class="row justify-content-md-center">
-                    
+                    <div class="col col-md-2">
+                        <label class="float-Right">Total task in project :</label>
+                    </div>
+                    <div class="col col-md-4">
+                        <label class="float-left">0</label>
+                    </div>
+                </div>
+                <div class="row justify-content-md-center">
+                    <div class="col col-md-2">
+                         <label class="float-Right">Active task in project :</label>
+                    </div>
+                    <div class="col col-md-4">
+                        <label class="float-left">0</label>
+                    </div>
                 </div>
                 </div>
             </div>
