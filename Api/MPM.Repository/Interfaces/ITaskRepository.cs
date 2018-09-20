@@ -9,6 +9,7 @@ namespace MPM.Repository.Interfaces
     {
         List<Task> GetAllTasks();
         Task GetTaskByID(int id);
+        List<Task> GetAllTasksByProjectID(int id);
         void AddTask(Task task);
         void UpdateTask(Task task);
         void DeleteTask(int id);

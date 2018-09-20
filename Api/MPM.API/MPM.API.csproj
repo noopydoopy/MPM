@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\Tasks2Controller.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

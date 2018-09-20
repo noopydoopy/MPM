@@ -1,4 +1,5 @@
-﻿using MPM.Databases.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MPM.Databases.Models;
 using MPM.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -82,6 +83,25 @@ namespace MPM.Repository
                 {
                     throw new Exception("Can't Update Task");
                 }
+            }
+        }
+
+        public List<Task> GetAllTasksByProjectID(int id)
+        {
+            try
+            {
+                var tasks = _context.Task
+                    .Where(t => t.ProjectId == id)
+                    .Include(t => t.Priority)
+                    .Include(t => t.Project)
+                    .Include(t => t.AssignToNavigation)
+                    .Include(t => t.Type)
+                    .ToList();
+                return tasks;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Can't find by ProjectID");
             }
         }
     }

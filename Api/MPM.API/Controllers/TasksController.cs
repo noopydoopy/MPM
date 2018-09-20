@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using MPM.API.ModelViews;
 using MPM.Databases.Models;
 using MPM.Repository.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace MPM.API.Controllers
 {
@@ -16,23 +19,49 @@ namespace MPM.API.Controllers
             taskRepository = context;
         }
 
-        //GET All       
-        [Route("getall")]
-        public List<Task> GetAllTasks()
+        // GET: api/Tasks
+        [HttpGet]
+        public List<Task> GetTask()
         {
             return taskRepository.GetAllTasks();
         }
 
-        //GET BY ID
-        [Route("getbyid")]
-        public Task GetTaskByID(int id)
+        // GET: api/Tasks/5
+        [HttpGet("{id}")]
+        public IActionResult GetTask([FromRoute] int id)
         {
-            return taskRepository.GetTaskByID(id);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var task = taskRepository.GetTaskByID(id);
+
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(task);
         }
 
-        //INSERT
-        [Route("insert")]
-        public IActionResult AddTask([FromBody] Task task)
+        // PUT: api/Tasks/5
+        [HttpPut("{id}")]
+        public IActionResult PutTask([FromBody] Task task)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            taskRepository.UpdateTask(task);
+
+            return Ok();
+        }
+
+        // POST: api/Tasks
+        [HttpPost]
+        public IActionResult PostTask([FromBody] Task task)
         {
             if (!ModelState.IsValid)
             {
@@ -44,13 +73,19 @@ namespace MPM.API.Controllers
             return CreatedAtAction("GetTaskByID", new { id = task.PriorityId }, task);
         }
 
-        //DELETE
-        [Route("delete")]
-        public IActionResult DeleteTask(int id)
+        // DELETE: api/Tasks/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTask([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            var task = taskRepository.GetTaskByID(id);
+            if (task == null)
+            {
+                return NotFound();
             }
 
             taskRepository.DeleteTask(id);
@@ -58,18 +93,19 @@ namespace MPM.API.Controllers
             return Ok();
         }
 
-        //UPDATE
-        [Route("update")]
-        public IActionResult PutTask([FromBody]Task task)
+        //Get by ProjectID
+        [Route("GetByProjectID/{id}")]
+        public List<TaskModelView> GetTasksByProjectID([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
+            var tasks = taskRepository.GetAllTasksByProjectID(id);
+
+            List<TaskModelView> taskList = new List<TaskModelView>();
+            foreach (var task in tasks)
             {
-                return BadRequest(ModelState);
+                taskList.Add(new TaskModelView(task));
             }
 
-            taskRepository.UpdateTask(task);
-
-            return Ok();
+            return taskList;
         }
     }
 }
