@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div>
-                 <b-container  class="w-100 mt-5">
+                 <b-container fluid class="w-100 mt-5">
                     <b-row class="w-100">
                         <user-project-control class="w-100" id="userProjectControl" 
                         v-bind:ProjectId="this.ProjectId" 

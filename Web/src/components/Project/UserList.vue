@@ -10,7 +10,7 @@
                 <b-col md="12" class="my-1">
                     <b-form-group horizontal label="Filter " class="mb-0">
                         <b-input-group>
-                            <b-form-input v-model="this.filterUser" placeholder="Type to Search" />
+                            <b-form-input v-model="filterUser" placeholder="Type to Search" />
                             <b-input-group-append>
                                 <b-btn :disabled="!this.filterUser" @click="this.filterUser = ''">Clear</b-btn>
                             </b-input-group-append>
@@ -41,6 +41,7 @@ export default {
      data: function () {
         return {
             fields: [
+                { key: 'userId', label: 'UserId', sortable: true, sortDirection: 'desc' ,'class': 'text-center' },
                 { key: 'name', label: 'User name', sortable: true, sortDirection: 'desc' ,'class': 'text-left' },
                 { key: 'email', label: 'Email', sortable: true,'class': 'text-left' },
                 { key: 'isActive', label: 'is Active' },
