@@ -27,5 +27,13 @@ export default {
         } else {
             return {};
         }
-    }
+    },
+    getUserByUserId(id) {
+        var url = this.data().apiHost + "/api/Users/" + id;
+        return axios.get(url);
+    },
+    updateUser(user) {
+        var url = this.data().apiHost + "/api/Users/" + user.userId;
+        return axios.put(url, user);
+    },
 }

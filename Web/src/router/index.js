@@ -48,7 +48,7 @@ export default new Router({
       component: TaskList
     },
     {
-      path: '/admin/manageuser',
+      path: '/admin/manageuser/:id',
       name: 'manageuser',
       component: ManageUser
     },

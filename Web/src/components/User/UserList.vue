@@ -41,11 +41,9 @@
       <template slot="isActive" slot-scope="row">{{row.value ?'Yes':'No'}}</template>
       <template slot="isAdmin" slot-scope="row">{{row.value ?'Yes':'No'}}</template>
       <template slot="actions" slot-scope="row">
-        <!-- We use @click.stop here to prevent a 'row-clicked' event from also happening -->
-        <b-button size="sm" @click.stop="info(row.item, row.index, $event.target)" class="mr-1">
-          Info modal
+        <b-button size="sm" :href="`/admin/manageuser/${row.item.userId}`" class="mr-1">
+          Edit Info
         </b-button>
-
       </template>
     </b-table>
 
@@ -54,12 +52,6 @@
         <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
       </b-col>
     </b-row>
-
-    <!-- Info modal -->
-    <b-modal id="modalInfo" @hide="resetModal" :title="modalInfo.title" ok-only>
-      <pre>{{ modalInfo.content }}</pre>
-    </b-modal>
-
   </b-container>
     </div>
 </template>
@@ -84,8 +76,7 @@ export default {
       sortBy: null,
       sortDesc: false,
       sortDirection: 'asc',
-      filter: null,
-      modalInfo: { title: '', content: '' }
+      filter: null
     }
   },
   computed: {
@@ -110,15 +101,6 @@ export default {
     // }
   },
   methods: {
-    info (item, index, button) {
-      this.modalInfo.title = `Row index: ${index}`
-      this.modalInfo.content = JSON.stringify(item, null, 2)
-      this.$root.$emit('bv::show::modal', 'modalInfo', button)
-    },
-    resetModal () {
-      this.modalInfo.title = ''
-      this.modalInfo.content = ''
-    },
     onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length
