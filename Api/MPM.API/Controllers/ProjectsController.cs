@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MPM.Databases.Models;
+using MPM.Model;
 using MPM.Repository.Interfaces;
 
 namespace MPM.API.Controllers
@@ -111,6 +112,12 @@ namespace MPM.API.Controllers
         private bool ProjectExists(int id)
         {
             return projectRepository.GetProjectByID(id) == null?false:true;
+        }
+
+        [HttpGet("GetProjectManage/{projectId}")]
+        public ProjectManageModel GetProjectManage(int projectId)
+        {
+            return projectRepository.GetProjectManageByProjectId(projectId);
         }
     }
 }

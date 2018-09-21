@@ -110,5 +110,25 @@ namespace MPM.Repository
 
             return tokenModel;
         }
+        public List<User> GetUserNotinProject(int projectId)
+        {
+            List<User> allUser = (from user in _context.User
+                           select user).ToList();
+
+            List<int> userInProject = (from userProject in _context.UserProject
+                               where userProject.ProjectId == projectId
+                                select userProject.UserId).ToList();
+
+            List<User> userList = allUser.Where(user => !userInProject.Any(uip=>uip==user.UserId)).ToList();
+            return userList;
+        }
+        public List<User> GetUserInProject(int projectId)
+        {
+            List<User> userInProject = (from user in _context.User
+                                        from userProject in _context.UserProject
+                                        where userProject.ProjectId == projectId && user.UserId == userProject.UserId
+                                        select user).ToList();
+            return userInProject;
+        }
     }
 }

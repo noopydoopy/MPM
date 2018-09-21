@@ -133,5 +133,19 @@ namespace MPM.API.Controllers
 
             return Ok(tokenModel);
         }
+
+        [HttpGet("GetUserNotInProjectId/{projectId}")]
+        public List<User> GetUserNotInProjectId([FromRoute] int projectId)
+        {
+            var users = userRepository.GetUserNotinProject(projectId);
+            return users;
+        }
+
+        [HttpGet("GetUserInProjectId/{projectId}")]
+        public List<User> GetUserInProjectId([FromRoute] int projectId)
+        {
+            var users = userRepository.GetUserInProject(projectId);
+            return users;
+        }
     }
 }

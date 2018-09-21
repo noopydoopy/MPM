@@ -1,4 +1,6 @@
-﻿using MPM.Databases.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using MPM.Databases.Models;
+using MPM.Model;
 using MPM.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -82,6 +84,27 @@ namespace MPM.Repository
                 return project.First();
             else
                 return null;
+        }
+
+        public ProjectManageModel GetProjectManageByProjectId(int projectId)
+        {
+            var project = _context.Project.Include(pro=>pro.UserProject)
+                .Include(pro=>pro.Task)
+                .Where(p => p.ProjectId == projectId)
+                .FirstOrDefault();
+
+            ProjectManageModel projectResult = new ProjectManageModel();
+            if(project != null)
+            {
+                projectResult.ProjectId = project.ProjectId;
+                projectResult.ProjectName = project.Name;
+                projectResult.ProjectIsActive = project.IsActive;               
+                projectResult.UserCount = project.UserProject.Count();
+                projectResult.TaskCount = project.Task.Count();
+                projectResult.TaskActiveCount = project.Task.Where(t => t.IsActive).Count();
+            }
+
+            return projectResult;
         }
     }
 }

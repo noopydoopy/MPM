@@ -47,17 +47,29 @@
                 </div>
                 </div>
             </div>
+            <div>
+                 <b-container  class="w-100 mt-5">
+                    <b-row class="w-100">
+                        <user-project-control class="w-100" id="userProjectControl"></user-project-control>
+                    </b-row>
+                 </b-container>
+            </div>
 
         </nav-layout>
     </div>
 </template>
 <script>
+import userProjectControl from '@/components/Project/UserProject'
 export default {
     name: 'ManageProject',
-     mounted() {
+ mounted() {
     console.log(this.$route.path)
     this.$emit('page-change', this.$route.name)
+
   },
+   components: {
+        userProjectControl,
+    },
   data: function () {
       return {
         ProjectName : null,

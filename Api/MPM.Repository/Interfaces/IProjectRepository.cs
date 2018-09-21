@@ -1,7 +1,9 @@
 ﻿using MPM.Databases.Models;
+using MPM.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
+
 
 namespace MPM.Repository.Interfaces
 {
@@ -12,5 +14,7 @@ namespace MPM.Repository.Interfaces
         void AddProject(Project session);
         void UpdateProject(Project session);
         void DeleteProject(int id);
+        ProjectManageModel GetProjectManageByProjectId(int projectId);
+
     }
 }
