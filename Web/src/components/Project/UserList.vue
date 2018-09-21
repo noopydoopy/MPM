@@ -10,9 +10,9 @@
                 <b-col md="12" class="my-1">
                     <b-form-group horizontal label="Filter " class="mb-0">
                         <b-input-group>
-                            <b-form-input v-model="this.filter" placeholder="Type to Search" />
+                            <b-form-input v-model="this.filterUser" placeholder="Type to Search" />
                             <b-input-group-append>
-                                <b-btn :disabled="!this.filter" @click="filter = ''">Clear</b-btn>
+                                <b-btn :disabled="!this.filterUser" @click="this.filterUser = ''">Clear</b-btn>
                             </b-input-group-append>
                         </b-input-group>
                     </b-form-group>
@@ -24,7 +24,7 @@
                          stacked="md"
                         :items="this.UserItem"
                         :fields="this.fields"
-                        :filter="this.filter"
+                        :filter="this.filterUser"
 
                         @filtered="this.onFiltered">
 
@@ -41,8 +41,8 @@ export default {
      data: function () {
         return {
             fields: [
-                { key: 'name', label: 'User name', sortable: true, sortDirection: 'desc' },
-                { key: 'email', label: 'Email', sortable: true,},
+                { key: 'name', label: 'User name', sortable: true, sortDirection: 'desc' ,'class': 'text-left' },
+                { key: 'email', label: 'Email', sortable: true,'class': 'text-left' },
                 { key: 'isActive', label: 'is Active' },
                 { key: 'actions', label: 'Actions' }
                 ],
@@ -50,18 +50,18 @@ export default {
             sortDesc: false,
           
             sortDirection: 'asc',
-            filter: null,
+            filterUser: null,
             //UserCaption : null,
         };
     },
      mounted() {
-
+         //console.log(this.UserItem);
      },
     methods:
     {
         onFiltered (filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
-        this.totalRows = filteredItems.length
+      //  this.totalRows = filteredItems.length
         }
     },
      computed:

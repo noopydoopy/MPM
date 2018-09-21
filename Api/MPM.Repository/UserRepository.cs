@@ -110,7 +110,7 @@ namespace MPM.Repository
 
             return tokenModel;
         }
-        public List<User> GetUserNotinProject(int projectId)
+        public List<UserProjectManageModel> GetUserNotinProject(int projectId)
         {
             List<User> allUser = (from user in _context.User
                            select user).ToList();
@@ -120,15 +120,28 @@ namespace MPM.Repository
                                 select userProject.UserId).ToList();
 
             List<User> userList = allUser.Where(user => !userInProject.Any(uip=>uip==user.UserId)).ToList();
-            return userList;
+            List<UserProjectManageModel> userProjectManageModel = TranferUserToUserProjectManage(userList);
+            return userProjectManageModel;
         }
-        public List<User> GetUserInProject(int projectId)
+        public List<UserProjectManageModel> GetUserInProject(int projectId)
         {
             List<User> userInProject = (from user in _context.User
                                         from userProject in _context.UserProject
                                         where userProject.ProjectId == projectId && user.UserId == userProject.UserId
                                         select user).ToList();
-            return userInProject;
+            List<UserProjectManageModel> userProjectManageModel = TranferUserToUserProjectManage(userInProject);
+
+            return userProjectManageModel;
+        }
+
+        private List<UserProjectManageModel> TranferUserToUserProjectManage(List<User> users)
+        {
+            List<UserProjectManageModel> userProjectManageModel = new List<UserProjectManageModel>();
+            foreach (var user in users)
+            {
+                userProjectManageModel.Add(new UserProjectManageModel(user));
+            }
+            return userProjectManageModel;
         }
     }
 }

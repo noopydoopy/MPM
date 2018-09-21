@@ -33,7 +33,7 @@ export default new Router({
       component: ManagePriority
     },
     {
-      path: '/manageproject',
+      path: '/manageproject/:projectId',
       name: 'ManageProject',
       component: ManageProject
     },

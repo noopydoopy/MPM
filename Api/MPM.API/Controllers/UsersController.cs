@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MPM.Databases.Models;
+using MPM.Model;
 using MPM.Repository.Interfaces;
 
 namespace MPM.API.Controllers
@@ -135,14 +136,14 @@ namespace MPM.API.Controllers
         }
 
         [HttpGet("GetUserNotInProjectId/{projectId}")]
-        public List<User> GetUserNotInProjectId([FromRoute] int projectId)
+        public List<UserProjectManageModel> GetUserNotInProjectId([FromRoute] int projectId)
         {
             var users = userRepository.GetUserNotinProject(projectId);
             return users;
         }
 
         [HttpGet("GetUserInProjectId/{projectId}")]
-        public List<User> GetUserInProjectId([FromRoute] int projectId)
+        public List<UserProjectManageModel> GetUserInProjectId([FromRoute] int projectId)
         {
             var users = userRepository.GetUserInProject(projectId);
             return users;
