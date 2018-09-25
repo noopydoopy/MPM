@@ -2,14 +2,16 @@
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MPM.Databases.Models;
-using MPM.Helpers;
 using MPM.Model;
 using MPM.Repository.Interfaces;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MPM.Repository
@@ -17,12 +19,14 @@ namespace MPM.Repository
     public class UserRepository : IUserRepository
     {
         private readonly mpmContext _context;
-        private readonly AppSettings _appSettings;
+        private readonly TokenModel _tokenModel;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public UserRepository(mpmContext context, IOptions<AppSettings> appSettings)
+        public UserRepository(mpmContext context, IOptions<TokenModel> tokenModel, IRefreshTokenRepository refreshTokenContext)
         {
             _context = context;
-            _appSettings = appSettings.Value;
+            _tokenModel = tokenModel.Value;
+            _refreshTokenRepository = refreshTokenContext;
         }
 
         public void AddUser(User user)
@@ -73,6 +77,8 @@ namespace MPM.Repository
 
         public void UpdateUser(User user)
         {
+            var passEnrypt = EncryptString(user.Password);
+            user.Password = passEnrypt;
             try
             {
                 _context.Entry(user).State = EntityState.Modified;
@@ -84,31 +90,50 @@ namespace MPM.Repository
             }
         }
 
-        public TokenModel Authenticate(string username, string password)
+        public UserModel Authenticate(String email, String password)
         {
-            var user = _context.User.SingleOrDefault(x => x.Email == username && x.Password == password);
+            var passEnrypt = EncryptString(password);
+            var user = _context.User.SingleOrDefault(x => x.Email == email && x.Password == passEnrypt);
 
             if (user == null)
                 return null;
 
-            // authentication successful so generate jwt token
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            UserModel userModel = GenTokenAndRefreshToken(user);
+
+            return userModel;
+        }
+
+        public UserModel RefreshToken(String refreshToken)
+        {
+            RefreshToken refreshTokenObj = _refreshTokenRepository.GetRefreshTokenByRefreshToken(refreshToken);
+
+            if(refreshTokenObj == null)
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                return null;
+            }
+            else
+            {
+                if(DateTime.Compare(DateTime.Now, refreshTokenObj.RefreshTokenExpire) > 0)
                 {
-                    new Claim(ClaimTypes.Name, user.UserId.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+                    _refreshTokenRepository.DeleteRefreshToken(refreshTokenObj.UserId);
+                    return null;
+                }
+                else
+                {
+                    var userDetail = DecryptString(refreshTokenObj.UserDetail);
+                    JObject jObject = JObject.Parse(userDetail);
 
-            TokenModel tokenModel = new TokenModel();
-            tokenModel.Token = tokenHandler.WriteToken(token);
+                    User user = new User();
+                    user.UserId = (int)jObject["UserId"];
+                    user.UserName = (String)jObject["UserName"];
+                    user.Name = (String)jObject["Name"];
+                    user.Email = (String)jObject["Email"];
+                    user.IsAdmin = (Boolean)jObject["IsAdmin"];
 
-            return tokenModel;
+                    UserModel userModel = GenTokenAndRefreshToken(user);
+                    return userModel;
+                }
+            }
         }
         public List<UserProjectManageModel> GetUserNotinProject(int projectId)
         {
@@ -143,5 +168,114 @@ namespace MPM.Repository
             }
             return userProjectManageModel;
         }
+
+        public string EncryptString(string Message)
+        {
+            byte[] Results;
+            System.Text.UTF8Encoding UTF8 = new System.Text.UTF8Encoding();
+            MD5CryptoServiceProvider HashProvider = new MD5CryptoServiceProvider();
+            byte[] TDESKey = HashProvider.ComputeHash(UTF8.GetBytes(_tokenModel.Key));
+            TripleDESCryptoServiceProvider TDESAlgorithm = new TripleDESCryptoServiceProvider();
+            TDESAlgorithm.Key = TDESKey;
+            TDESAlgorithm.Mode = CipherMode.ECB;
+            TDESAlgorithm.Padding = PaddingMode.PKCS7;
+            byte[] DataToEncrypt = UTF8.GetBytes(Message);
+            try
+            {
+                ICryptoTransform Encryptor = TDESAlgorithm.CreateEncryptor();
+                Results = Encryptor.TransformFinalBlock(DataToEncrypt, 0, DataToEncrypt.Length);
+            }
+            finally
+            {
+                TDESAlgorithm.Clear();
+                HashProvider.Clear();
+            }
+            return Convert.ToBase64String(Results);
+        }
+
+        public string DecryptString(string Message)
+        {
+            byte[] Results;
+            System.Text.UTF8Encoding UTF8 = new System.Text.UTF8Encoding();
+            MD5CryptoServiceProvider HashProvider = new MD5CryptoServiceProvider();
+            byte[] TDESKey = HashProvider.ComputeHash(UTF8.GetBytes(_tokenModel.Key));
+            TripleDESCryptoServiceProvider TDESAlgorithm = new TripleDESCryptoServiceProvider();
+            TDESAlgorithm.Key = TDESKey;
+            TDESAlgorithm.Mode = CipherMode.ECB;
+            TDESAlgorithm.Padding = PaddingMode.PKCS7;
+            byte[] DataToDecrypt = Convert.FromBase64String(Message);
+            try
+            {
+                ICryptoTransform Decryptor = TDESAlgorithm.CreateDecryptor();
+                Results = Decryptor.TransformFinalBlock(DataToDecrypt, 0, DataToDecrypt.Length);
+            }
+            finally
+            {
+                TDESAlgorithm.Clear();
+                HashProvider.Clear();
+            }
+            return UTF8.GetString(Results);
+        }
+
+        public UserModel GenTokenAndRefreshToken(User user)
+        {
+            // authentication successful so generate jwt token
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_tokenModel.Key);
+            var tokenExpireDate = DateTime.Now.AddDays(_tokenModel.TokenExpire);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.UserId.ToString())
+                }),
+                Expires = tokenExpireDate,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            //generate refresh token
+            var RefreshTokenExpireDate = DateTime.Now.AddDays(_tokenModel.RefreshTokenExpire);
+            var RefreshTokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.UserId.ToString())
+                }),
+                Expires = RefreshTokenExpireDate,
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var refreshToken = tokenHandler.CreateToken(RefreshTokenDescriptor);
+
+            UserModel userModel = new UserModel();
+            userModel.AccessToken = tokenHandler.WriteToken(token);
+            userModel.AccessTokenExpire = tokenExpireDate;
+            userModel.RefreshToken = tokenHandler.WriteToken(refreshToken);
+            userModel.RefreshTokenExpire = RefreshTokenExpireDate;
+            userModel.UserId = user.UserId;
+            userModel.UserName = user.UserName;
+            userModel.Name = user.Name;
+            userModel.Email = user.Email;
+            userModel.IsAdmin = user.IsAdmin;
+
+            var userId = EncryptString(user.UserId.ToString()).Trim();
+            RefreshToken refreshTokenDb = new RefreshToken();
+            refreshTokenDb.UserId = userId;
+            refreshTokenDb.Rtoken = userModel.RefreshToken;
+            refreshTokenDb.RefreshTokenExpire = RefreshTokenExpireDate;
+            refreshTokenDb.UserDetail = EncryptString(JsonConvert.SerializeObject(userModel));
+            refreshTokenDb.CreateDate = DateTime.Now;
+
+            //get old refresh token
+            RefreshToken oldRefreshToken = _refreshTokenRepository.GetRefreshTokenByUserId(userId);
+            if (oldRefreshToken != null)
+            {
+                _refreshTokenRepository.DeleteRefreshToken(userId);
+            }
+
+            _refreshTokenRepository.AddRefreshToken(refreshTokenDb);
+            return userModel;
+        }
     }
+
 }

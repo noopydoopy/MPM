@@ -12,9 +12,9 @@ export default {
         var url = this.data().apiHost + "/api/Users/" + user.userId;
         return axios.put(url, user);
     },
-    logIn(user) {
+    logIn(authen) {
         var url = this.data().apiHost + "/api/Users/authentication"
-        return axios.post(url, user);
+        return axios.post(url, authen);
     },
     logOut() {
         localStorage.removeItem('token');

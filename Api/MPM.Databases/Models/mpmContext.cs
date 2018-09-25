@@ -6,10 +6,15 @@ namespace MPM.Databases.Models
 {
     public partial class mpmContext : DbContext
     {
-        public mpmContext(DbContextOptions<mpmContext> options) : base(options) { }
+
+        public mpmContext(DbContextOptions<mpmContext> options)
+            : base(options)
+        {
+        }
 
         public virtual DbSet<Priority> Priority { get; set; }
         public virtual DbSet<Project> Project { get; set; }
+        public virtual DbSet<RefreshToken> RefreshToken { get; set; }
         public virtual DbSet<Task> Task { get; set; }
         public virtual DbSet<Type> Type { get; set; }
         public virtual DbSet<User> User { get; set; }
@@ -25,6 +30,28 @@ namespace MPM.Databases.Models
             modelBuilder.Entity<Project>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<RefreshToken>(entity =>
+            {
+                entity.HasKey(e => e.UserId);
+
+                entity.Property(e => e.UserId)
+                    .HasMaxLength(50)
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.CreateDate).HasColumnType("datetime");
+
+                entity.Property(e => e.RefreshTokenExpire).HasColumnType("datetime");
+
+                entity.Property(e => e.Rtoken)
+                    .IsRequired()
+                    .HasColumnName("RToken")
+                    .HasMaxLength(2000);
+
+                entity.Property(e => e.UserDetail)
+                    .IsRequired()
+                    .HasMaxLength(2000);
             });
 
             modelBuilder.Entity<Task>(entity =>

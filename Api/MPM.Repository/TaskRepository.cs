@@ -63,26 +63,14 @@ namespace MPM.Repository
         //UPDATE
         public void UpdateTask(Task task)
         {
-            var taskDb = _context.Task.SingleOrDefault(c => c.TaskId == task.TaskId);
-            if (taskDb != null)
+            try
             {
-                try
-                {
-                    taskDb.Title = task.Title;
-                    taskDb.Description = task.Description;
-                    taskDb.StartDate = task.StartDate;
-                    taskDb.EndDate = task.EndDate;
-                    taskDb.PriorityId = task.PriorityId;
-                    taskDb.ProjectId = task.ProjectId;
-                    taskDb.TypeId = task.TypeId;
-                    taskDb.AssignTo = task.AssignTo;
-                    taskDb.IsActive = task.IsActive;
-                    _context.SaveChanges();
-                }
-                catch (Exception)
-                {
-                    throw new Exception("Can't Update Task");
-                }
+                _context.Entry(task).State = EntityState.Modified;
+                _context.SaveChanges();
+            }
+            catch
+            {
+                throw;
             }
         }
 

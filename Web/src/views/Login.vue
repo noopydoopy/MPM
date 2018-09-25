@@ -8,8 +8,7 @@
                     <b-form @submit="onSubmit" @reset="onReset" >
                         <b-form-group id="Email"
                                         label="Email address:"
-                                        label-for="email"
-                                        description="We'll never share your email with anyone else.">
+                                        label-for="email">
                             <b-form-input id="email"
                                         type="email"
                                         v-model="user.email"
@@ -27,9 +26,9 @@
                                         placeholder="Enter name">
                             </b-form-input>
                         </b-form-group>
-                        <div class="invalid-feedback" v-if="!isLogin">
-                            The email or password you entered is incorrect.
-                        </div>
+                        <b-alert variant="danger" dismissible :show="!isLogin">
+                          The email or password you entered is incorrect.
+                        </b-alert>
                         <b-form-group id="RememberMe">          
                             <b-form-checkbox v-model="remember">Remeber me</b-form-checkbox>              
                         </b-form-group>
@@ -56,26 +55,27 @@ import userService from "@/api/UserService";
 export default {
   data: () => ({
     user: {
+      grantType: 'password',
       email: null,
       password: null
     },
     remember: false,
-    isLogin: false
+    isLogin: true
   }),
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
       userService.logIn(this.user).then(
         response => {
-          this.isLogin = true
+          this.isLogin = true;
           if (response.data.token) {
             localStorage.setItem("token", response.data.token);
           }
           this.$router.push({ path: "/" });
         },
         error => {
-          this.isLogin = false
-          }
+          this.isLogin = false;
+        }
       );
     },
     onReset(evt) {
@@ -87,4 +87,3 @@ export default {
   }
 };
 </script>
-

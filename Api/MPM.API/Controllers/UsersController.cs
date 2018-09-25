@@ -125,14 +125,35 @@ namespace MPM.API.Controllers
         }
 
         [HttpPost("authentication")]
-        public IActionResult Authenticate([FromBody]User userParam)
+        public IActionResult Authenticate([FromBody]AuthenModel authen)
         {
-            var tokenModel = userRepository.Authenticate(userParam.Email, userParam.Password);
+            if (authen == null)
+            {
+                return BadRequest("parameter is null");
+            }
 
-            if (tokenModel == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+            UserModel userModel = new UserModel();
+            if (authen.GrantType == "password")
+            {
+                userModel = userRepository.Authenticate(authen.Email, authen.Password);
+                if (userModel == null){
+                    return BadRequest(new { message = "Invalid Username or Password" });
+                }
+            }
+            else if (authen.GrantType == "refresh_token")
+            {
+                userModel = userRepository.RefreshToken(authen.RefreshToken);
+                if (userModel == null)
+                {
+                    return BadRequest(new { message = "Invalid Refresh Token" });
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
 
-            return Ok(tokenModel);
+            return Ok(userModel);
         }
 
         [HttpGet("GetUserNotInProjectId/{projectId}")]

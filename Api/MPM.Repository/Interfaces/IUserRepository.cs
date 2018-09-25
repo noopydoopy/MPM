@@ -2,7 +2,6 @@
 using MPM.Model;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MPM.Repository.Interfaces
 {
@@ -14,7 +13,8 @@ namespace MPM.Repository.Interfaces
         void AddUser(User user);
         void UpdateUser(User user);
         void DeleteUser(int userId);
-        TokenModel Authenticate(string username, string password);
+        UserModel Authenticate(string username, string password);
+        UserModel RefreshToken(String refreshToken);
         List<UserProjectManageModel> GetUserNotinProject(int projectId);
         List<UserProjectManageModel> GetUserInProject(int projectId);
     }
