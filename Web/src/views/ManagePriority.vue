@@ -68,6 +68,7 @@
 import PriorityList from '@/components/Priority/PriorityList'
 import ColorPickerChrome from '@/components/Priority/ColorPickerChrome'
 import axios from 'axios';
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'ManagePriority',
@@ -85,24 +86,23 @@ export default {
             PriorityId: null,
             PriorityNumber: null,
             Color:null,
-            PriorityListItem: [],
             ApiHost: 'https://localhost:44382',
             ShowEdit:false,
             IsNew : false,
             ShowSaveAlert : false,
             SaveResultMsg : null,
         };
-    },    
+    },  
+    computed: 
+    {
+        ...mapGetters({PriorityListItem: 'managePriorityModule/priorityItem'}),
+    },
+    
     methods:
     {
         loadPriority()
         {
-            const url = this.ApiHost +'/api/Priorities';
-            var vm = this;
-             axios.get(url)
-                .then(function (response) {
-                    vm.PriorityListItem = response.data;
-                });
+            this.$store.dispatch('managePriorityModule/requestPriorityListItem')
         },
         AddNewPriority: function(pNumber,pColor)
         {

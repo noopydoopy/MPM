@@ -9,7 +9,7 @@
                         <label class="float-right">Project Name : </label>
                     </div>
                     <div class="col col-md-2">
-                        <input v-model="this.ProjectName" class="form-control" style="width: 300px;">
+                        <input v-model="ProjectName" class="form-control" style="width: 300px;">
                     </div>
                     <div class="col col-md-2">
                     </div>
@@ -21,7 +21,7 @@
                     <div class="col col-md-2 ">
                          <b-form-checkbox id="chkIsActive"
                             class="float-left mt-2"
-                            v-model="this.IsActive"
+                            v-model="IsActive"
                             value=true
                             unchecked-value=false>                            
                         </b-form-checkbox>

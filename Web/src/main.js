@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router/index'
-import store from './store/store'
+import store from './store/index'
 import BootstrapVue from 'bootstrap-vue'
 
 import WideLayout from '@/layout/WideLayout'
