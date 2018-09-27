@@ -95,7 +95,9 @@ export default {
     },  
     computed: 
     {
-        ...mapGetters({PriorityListItem: 'managePriorityModule/priorityItem'}),
+        ...mapGetters({
+            PriorityListItem: 'managePriorityModule/priorityItem'
+            })
     },
     
     methods:

@@ -17,7 +17,7 @@ const actions = {
 
     async requestPriorityListItem({state, commit}) {
         let priorities = await priorityService.loadPriorityItem()
-        commit(type.requestPriorityListItem,priorities )
+        commit(type.requestPriorityListItem,priorities.data )
     }
 }
 
