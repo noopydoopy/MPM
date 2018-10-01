@@ -80,6 +80,10 @@ const actions = {
                         commit(type.updateAuthenticationStore, null)
                     }
                 );
+            } else {
+                localStorage.removeItem("token");
+                localStorage.removeItem("rememberMe");
+                commit(type.updateAuthenticationStore, null)
             }
         }
     }

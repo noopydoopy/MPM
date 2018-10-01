@@ -31,8 +31,8 @@
                     <b-button size="sm" class="my-2 my-sm-0" type="button">Search</b-button>
                 </b-nav-form>
 
-
-                <b-nav-item-dropdown right>
+                <b-nav-item v-if=!user href="#"><router-link to="/login">Login</router-link> </b-nav-item>
+                <b-nav-item-dropdown v-if=user right>
                     <!-- Using button-content slot -->
                     <template slot="button-content">
                     <em>Account</em>
@@ -60,6 +60,8 @@ nav a.router-link-exact-active {
 </style>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data: () => ({
     title: "Nav template"
@@ -70,6 +72,11 @@ export default {
       localStorage.removeItem("rememberMe");
       this.$router.push({ path: "/login" });
     }
+  },
+  computed: {
+    ...mapGetters({
+      user: "authenticationModule/user"
+    })
   }
 };
 </script>
