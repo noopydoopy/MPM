@@ -33,18 +33,18 @@ export default {
   }),
   methods: {
     switchTemplate() {
-      if(this.currentTemplate === 'nav-layout'){
-        this.currentTemplate = 'wide-layout'
-      }
-      else {
-        this.currentTemplate = 'nav-layout'
+      if (this.currentTemplate === "nav-layout") {
+        this.currentTemplate = "wide-layout";
+      } else {
+        this.currentTemplate = "nav-layout";
       }
     },
     pageChange() {
-      console.log('Page changed')
+      console.log("Page changed");
     }
   },
-  mounted() {
+  beforeUpdate() {
+    this.$store.dispatch("authenticationModule/setAuthenticationStore");
     // this.$emit('page-change', this.$route.path)
   }
 };

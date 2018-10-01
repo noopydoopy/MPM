@@ -60,15 +60,14 @@ nav a.router-link-exact-active {
 </style>
 
 <script>
-import userService from "@/api/UserService";
-
 export default {
   data: () => ({
     title: "Nav template"
   }),
   methods: {
     logOut: function() {
-      userService.logOut();
+      localStorage.removeItem("token");
+      localStorage.removeItem("rememberMe");
       this.$router.push({ path: "/login" });
     }
   }

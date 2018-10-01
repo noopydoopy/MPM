@@ -1,10 +1,8 @@
 <template>
     <div>
+        <br><br>
         <h3>
-            Invalid Activated Code 
+            Activated code is invalid, Please contact your administrator.
         </h3>
-        <h5>
-            Invalid Activated Code 
-        </h5>
     </div>
 </template>

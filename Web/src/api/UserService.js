@@ -16,18 +16,6 @@ export default {
         var url = this.data().apiHost + "/api/Users/authentication"
         return axios.post(url, authen);
     },
-    logOut() {
-        localStorage.removeItem('token');
-    },
-    authHeader() {
-        let token = localStorage.getItem('token');
-    
-        if (token) {
-            return { 'Authorization': 'Bearer ' + token };
-        } else {
-            return {};
-        }
-    },
     getUserByUserId(id) {
         var url = this.data().apiHost + "/api/Users/" + id;
         return axios.get(url);

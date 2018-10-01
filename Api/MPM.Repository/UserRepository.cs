@@ -222,7 +222,7 @@ namespace MPM.Repository
             // authentication successful so generate jwt token
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_tokenModel.Key);
-            var tokenExpireDate = DateTime.Now.AddDays(_tokenModel.TokenExpire);
+            var tokenExpireDate = DateTime.Now.AddSeconds(_tokenModel.TokenExpire);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -235,7 +235,7 @@ namespace MPM.Repository
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             //generate refresh token
-            var RefreshTokenExpireDate = DateTime.Now.AddDays(_tokenModel.RefreshTokenExpire);
+            var RefreshTokenExpireDate = DateTime.Now.AddSeconds(_tokenModel.RefreshTokenExpire);
             var RefreshTokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]

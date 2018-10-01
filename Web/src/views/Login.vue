@@ -1,6 +1,7 @@
 <template>
     <div>
-        <wide-layout>
+        <nav-layout>
+          <br>
         <b-container>
             <b-card class="text-left">
                 <b-card-header>Login</b-card-header>
@@ -39,7 +40,7 @@
                 </b-card-body>
             </b-card>
         </b-container>
-        </wide-layout>
+        </nav-layout>
     </div>
 </template>
 
@@ -55,7 +56,7 @@ import userService from "@/api/UserService";
 export default {
   data: () => ({
     user: {
-      grantType: 'password',
+      grantType: "password",
       email: null,
       password: null
     },
@@ -68,8 +69,15 @@ export default {
       userService.logIn(this.user).then(
         response => {
           this.isLogin = true;
-          if (response.data.token) {
-            localStorage.setItem("token", response.data.token);
+          if (response.data) {
+            localStorage.setItem("token", JSON.stringify(response.data));
+            if (this.remember) {
+              var rememberMe = {
+                refreshToken: response.data.refreshToken,
+                refreshTokenExpire: response.data.refreshTokenExpire
+              };
+              localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
+            }
           }
           this.$router.push({ path: "/" });
         },
