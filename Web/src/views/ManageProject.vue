@@ -9,7 +9,7 @@
                         <label class="float-right">Project Name : </label>
                     </div>
                     <div class="col col-md-2">
-                        <input v-model="ProjectName" class="form-control" style="width: 300px;">
+                        <input v-model="ProjectManageData.projectName" class="form-control" style="width: 300px;">
                     </div>
                     <div class="col col-md-2">
                     </div>
@@ -21,7 +21,7 @@
                     <div class="col col-md-2 ">
                          <b-form-checkbox id="chkIsActive"
                             class="float-left mt-2"
-                            v-model="IsActive"
+                            v-model="ProjectManageData.projectIsActive"
                             value=true
                             unchecked-value=false>                            
                         </b-form-checkbox>
@@ -34,7 +34,7 @@
                         <label class="float-Right">Total task in project :</label>
                     </div>
                     <div class="col col-md-4">
-                        <label class="float-left">{{this.TaskCount}}</label>
+                        <label class="float-left">{{ProjectManageData.taskCount}}</label>
                     </div>
                 </div>
                 <div class="row justify-content-md-center">
@@ -42,7 +42,7 @@
                          <label class="float-Right">Active task in project :</label>
                     </div>
                     <div class="col col-md-4">
-                        <label class="float-left">{{this.TaskActive}}</label>
+                        <label class="float-left">{{ProjectManageData.taskActiveCount}}</label>
                     </div>
                 </div>
                 </div>
@@ -64,6 +64,7 @@
 <script>
 import userProjectControl from '@/components/Project/UserProject'
 import axios from 'axios';
+import { mapGetters } from 'vuex'
 export default {
     name: 'ManageProject',
  mounted() {
@@ -82,11 +83,6 @@ export default {
         IsActive : true,
         TaskCount:null,
         TaskActive:null,
-        ApiHost: 'https://localhost:44382',
-        UserNotProjectList:[],
-        UserInProjectList:[],
-        ProjectManageData:[],
-
       };
   },
   mounted() {
@@ -107,40 +103,24 @@ export default {
       },
       LoadProject(proId)
         {
-            const url = this.ApiHost +'/api/Projects/GetProjectManage/'+proId;;
-            var vm = this;
-             axios.get(url)
-                .then(function (response) {
-                    vm.ProjectManageData = response.data;
-                    vm.ProjectName = vm.ProjectManageData.projectName;
-                    vm.IsActive = vm.ProjectManageData.projectIsActive;
-                    vm.TaskCount = vm.ProjectManageData.taskCount;
-                    vm.TaskActive = vm.ProjectManageData.taskActiveCount;
-                });
+            this.$store.dispatch('manageProjectModule/requestProjectList',proId);
         },
         LoadUserNotInProject(proId)
         {
-            const url = this.ApiHost +'/api/Users/GetUserNotInProjectId/'+proId;;
-            var vm = this;
-             axios.get(url)
-                .then(function (response) {
-                    vm.UserNotProjectList = response.data;
-                    
-                });
+            this.$store.dispatch('manageProjectModule/requestUserNotProjectList',proId);
         },
         LoadUserInProject(proId)
         {
-            const url = this.ApiHost +'/api/Users/GetUserInProjectId/'+proId;;
-            var vm = this;
-             axios.get(url)
-                .then(function (response) {
-                    vm.UserInProjectList = response.data;
-                });
+             this.$store.dispatch('manageProjectModule/requestUserInProjectList',proId);
         },
   },
   computed:
     {
-       
+       ...mapGetters({
+            UserNotProjectList: 'manageProjectModule/userNotProjectList',
+            UserInProjectList: 'manageProjectModule/userInProjectList',
+            ProjectManageData: 'manageProjectModule/projectManageData'
+            })
     },
 
 }

@@ -24,4 +24,14 @@ export default {
         var url = this.data().apiHost + "/api/Users/" + user.userId;
         return axios.put(url, user);
     },
+    loadUserNotInProject(proId)
+    {
+        const url = this.data().apiHost  +'/api/Users/GetUserNotInProjectId/'+proId;;
+        return axios.get(url);
+    },
+    loadUserInProject(proId)
+    {
+        const url = this.data().apiHost  +'/api/Users/GetUserInProjectId/'+proId;;
+        return axios.get(url);
+    },
 }

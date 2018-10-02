@@ -1,5 +1,4 @@
 import priorityService from '@/api/PriorityService'
-import store from '@/store'
 
 const type = {
     requestPriorityListItem: 'PRIORITY_REQUEST_PRIORITYITEMS',

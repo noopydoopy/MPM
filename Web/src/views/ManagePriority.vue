@@ -67,7 +67,7 @@
 <script>
 import PriorityList from '@/components/Priority/PriorityList'
 import ColorPickerChrome from '@/components/Priority/ColorPickerChrome'
-import axios from 'axios';
+
 import { mapGetters } from 'vuex'
 
 export default {
@@ -86,7 +86,6 @@ export default {
             PriorityId: null,
             PriorityNumber: null,
             Color:null,
-            ApiHost: 'https://localhost:44382',
             IsNew : false,
         };
     },  
