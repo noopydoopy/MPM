@@ -75,6 +75,16 @@ namespace MPM.Repository
             return user;
         }
 
+        public User GetUserResetPasswordByCode(String code)
+        {
+            var query = from User in _context.User
+                        where User.Code == code
+                          && User.IsActive == true
+                        select User;
+            User user = query.FirstOrDefault();
+            return user;
+        }
+
         public void UpdateUser(User user)
         {
             var passEnrypt = EncryptString(user.Password);

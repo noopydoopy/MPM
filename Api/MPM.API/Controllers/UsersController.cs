@@ -64,6 +64,25 @@ namespace MPM.API.Controllers
             return Ok(user);
         }
 
+        // GET: api/Users/code
+        [HttpGet("resetPasswordCode/{code}")]
+        public IActionResult GetUserResetPasswordByCode([FromRoute] String code)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = userRepository.GetUserResetPasswordByCode(code);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
+        }
+
         // PUT: api/Users/5
         [HttpPut("{id}")]
         public IActionResult PutUser([FromRoute] int id, [FromBody] User user)

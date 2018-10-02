@@ -16,6 +16,9 @@
                                         placeholder="Enter email">
                             </b-form-input>
                         </b-form-group>
+                        <b-alert variant="danger" dismissible :show="!isEmailValid">
+                          Please provide a valid email.
+                        </b-alert>
                         <b-form-group id="Password"
                                         label="Password:"
                                         label-for="password">
@@ -36,6 +39,9 @@
                                         placeholder="Confirm password">
                             </b-form-input>
                         </b-form-group>
+                        <b-alert variant="danger" dismissible :show="!isPasswordValid">
+                          Password is not matched.
+                        </b-alert>
                         <b-form-group id="Name"
                                         label="Name:"
                                         label-for="name">
@@ -45,6 +51,9 @@
                                         placeholder="Enter name">
                             </b-form-input>
                         </b-form-group>
+                        <b-alert variant="danger" dismissible :show="!isNameValid">
+                          Please fill name
+                        </b-alert>
                         <b-button type="button" @click="onSubmit" size="sm" variant="primary">Submit</b-button> 
                         <span style="margin-left:10px;"></span>
                         </b-form>
@@ -65,7 +74,10 @@ export default {
         password: null,
         cpassword: null,
         name: this.user.name
-      }
+      },
+      isEmailValid: true,
+      isPasswordValid: true,
+      isNameValid: true
     };
   },
   methods: {
@@ -75,17 +87,23 @@ export default {
         this.user.password = this.form.password;
         this.user.name = this.form.name;
         this.user.isActive = true;
-        this.$emit('active-user', this.user);
-      } else {
-        alert("data fail");
+        this.$emit("update-user", this.user);
       }
     },
     validateForm() {
-      if (this.form.password == this.form.cpassword) {
-        return true;
-      } else {
-        return false;
-      }
+      this.isEmailValid = this.validateEmail(this.form.email);
+      this.isPasswordValid = this.validatePassword();
+      this.isNameValid = (this.form.name != null && this.form.name!="");
+      return this.isEmailValid && this.isPasswordValid && this.isNameValid;
+    },
+    validateEmail(email) {
+      var regx = /^([\w.-]+)@(\[(\d{1,3}\.){3}|(([a-zA-Z\d-]+\.)+))([a-zA-Z]{2,4}|\d{1,3})(\]?)$/;
+      return regx.test(email);
+    },
+    validatePassword() {
+      return (
+        this.form.password == this.form.cpassword && this.form.password != null && this.form.password != ""
+      );
     }
   }
 };

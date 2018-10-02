@@ -8,7 +8,7 @@ export default {
         var url = this.data().apiHost + "/api/Users/code/" + code;
         return axios.get(url);
     },
-    activeUser(user) {
+    updateUser(user) {
         var url = this.data().apiHost + "/api/Users/" + user.userId;
         return axios.put(url, user);
     },
@@ -16,8 +16,12 @@ export default {
         var url = this.data().apiHost + "/api/Users/authentication"
         return axios.post(url, authen);
     },
+    getUserResetPasswordByCode(code) {
+        var url = this.data().apiHost + "/api/Users/resetPasswordCode/" + code;
+        return axios.get(url);
+    },
     getUserByUserId(id) {
-        var url = this.data().apiHost + "/api/Users/" + id;
+        var url = this.data().apiHost + "/api/Users/code/" + code;
         return axios.get(url);
     },
     updateUser(user) {

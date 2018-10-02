@@ -2,7 +2,7 @@
     <div>
         <nav-layout>
         
-        <component :is="component" v-bind:user="user" @active-user="activeUser"></component>
+        <component :is="component" v-bind:user="user" @update-user="updateUser"></component>
         </nav-layout>
     </div>
 </template>
@@ -12,6 +12,7 @@ import Profile from "@/components/User/Profile";
 import UserList from "@/components/User/UserList";
 import UserDetailUpdate from "@/components/User/UserDetailUpdate";
 import UserDetailUpdateError from "@/components/User/UserDetailUpdateError";
+import userResetPassword from "@/components/User/UserResetPassword";
 import userService from "@/api/UserService";
 
 export default {
@@ -19,6 +20,7 @@ export default {
     Profile,
     UserList,
     UserDetailUpdate,
+    userResetPassword,
     UserDetailUpdateError
   },
   data: () => ({
@@ -48,11 +50,24 @@ export default {
           }
         }
       );
+    }else if (this.$route.params.mode === "resetPassword"){
+      var code = this.$route.query.code;
+      userService.getUserResetPasswordByCode(code).then(
+        response => {
+          this.user = response.data;
+          this.component = "user-reset-password";
+        },
+        error => {
+          if (error.response.status == 404) {
+            this.component = "user-detail-update-error";
+          }
+        }
+      );
     }
   },
   methods: {
-    activeUser: function(user) {
-      userService.activeUser(user).then(
+    updateUser: function(user) {
+      userService.updateUser(user).then(
         response => {
           this.$router.push({ path: "/login" });
         },

@@ -29,10 +29,9 @@
                         </b-form-group>
                         <b-alert variant="danger" dismissible :show="!isLogin">
                           The email or password you entered is incorrect.
-                        </b-alert>
-                        <b-form-group id="RememberMe">          
-                            <b-form-checkbox v-model="remember">Remeber me</b-form-checkbox>              
-                        </b-form-group>
+                        </b-alert>        
+                        <b-form-checkbox id="RememberMe" v-model="remember">Remeber me</b-form-checkbox>              
+                        <b-link to="#">Forget password</b-link><br><br>
                         <b-button type="submit" size="sm" variant="primary">Submit</b-button> 
                         <span style="margin-left:10px;"></span>
                         <b-button type="reset" size="sm" variant="danger">Reset</b-button>

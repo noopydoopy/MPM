@@ -10,6 +10,7 @@ namespace MPM.Repository.Interfaces
         List<User> GetAllUsers();
         User GetUserById(int userId);
         User GetUserByCode(String code);
+        User GetUserResetPasswordByCode(String code);
         void AddUser(User user);
         void UpdateUser(User user);
         void DeleteUser(int userId);
