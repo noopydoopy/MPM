@@ -9,7 +9,7 @@
                         <b-alert variant="danger"
                             dismissible
                             :show="ShowSaveAlert"
-                            @dismissed="ShowSaveAlert=false">
+                            @dismissed="ShowEditForm(false)">
                             {{SaveResultMsg}}
                         </b-alert>
                         </div>
@@ -87,16 +87,16 @@ export default {
             PriorityNumber: null,
             Color:null,
             ApiHost: 'https://localhost:44382',
-            ShowEdit:false,
             IsNew : false,
-            ShowSaveAlert : false,
-            SaveResultMsg : null,
         };
     },  
     computed: 
     {
         ...mapGetters({
-            PriorityListItem: 'managePriorityModule/priorityItem'
+            PriorityListItem: 'managePriorityModule/priorityItem',
+            ShowEdit: 'managePriorityModule/showEdit',
+            ShowSaveAlert: 'managePriorityModule/showSaveAlert',
+            SaveResultMsg: 'managePriorityModule/saveResultMsg'
             })
     },
     
@@ -106,72 +106,39 @@ export default {
         {
             this.$store.dispatch('managePriorityModule/requestPriorityListItem')
         },
+        ShowEditForm(show)
+        {
+            this.$store.dispatch('managePriorityModule/showEditForm',show)
+        },
         AddNewPriority: function(pNumber,pColor)
         {
-            const url = this.ApiHost +'/api/Priorities';
-            const config = {
-            headers: {              
-                'Content-Type': 'application/json',
-                }
-             }
-            const requestBody = {
-                PriorityNumber: pNumber,
-                Color: pColor
-            }
-            var vm = this;
-            axios.post(url,requestBody,config).then(result => 
-                    {
-                        vm.ClosedPriority();
-                        vm.loadPriority();
-                    }
-            ).catch(e => {
-                console.log(e);
-                    vm.SetResultMsg(true, e);
-                });        
+            this.$store.dispatch('managePriorityModule/requestAddPriority',{
+                    priorityNumber:pNumber
+                    ,color :pColor           
+            })
+            
         },
         UpdatePriority: function(pId,pNumber,pColor)
         {
-            const url = this.ApiHost +'/api/Priorities/'+pId;
-            const config = {
-            headers: {              
-                'Content-Type': 'application/json',
-                }
-             }
-            const requestBody = {
-                PriorityId:pId,
-                PriorityNumber: pNumber,
-                Color: pColor
-            }
-            var vm = this;
-            axios.put(url,requestBody,config).then(result => 
-                    {
-                        vm.ClosedPriority();
-                        vm.loadPriority();
-                    }
-            ).catch(e => {
-                    vm.SetResultMsg(true,'Error: ' + e);
-                });        
+               this.$store.dispatch('managePriorityModule/requestUpdatePriority',{
+                    priorityId: pId
+                    ,priorityNumber: pNumber
+                    ,color :pColor           
+            })     
         },
         DeletePriorityData(pId)
         {
-             const url = this.ApiHost +'/api/Priorities/'+pId;
-            
-            var vm = this;
-            axios.delete(url).then(result => 
-                    {
-                        vm.loadPriority();
-                    }
-            ).catch(e => {
-                    vm.SetResultMsg(true,'Error: ' + e);
-                });  
+                this.$store.dispatch('managePriorityModule/requestDeletePriority',pId);
+                
         },
         AddPriority()
         {
             this.PriorityId = null;
             this.PriorityNumber = null;
-            this.Color = null;
-            this.ShowEdit = true;   
-            this.IsNew = true;         
+            this.Color = null;           
+            this.IsNew = true;    
+            
+            this.ShowEditForm(true);
         },
         DeletePriority(priority)
         {
@@ -187,13 +154,13 @@ export default {
                 this.PriorityId = priority.priorityId;
                 this.PriorityNumber = priority.priorityNumber;
                 this.Color = priority.color;
-                this.ShowEdit = true;   
+                this.ShowEditForm(true); 
                 this.IsNew = false;  
             }     
         },
         ClosedPriority()
         {
-            this.ShowEdit = false;
+            this.ShowEditForm(false);
             this.PriorityId = null;
             this.PriorityNumber = null;
             this.Color = null;
@@ -223,11 +190,9 @@ export default {
         },
         SetResultMsg : function(show,msg)
         {
-                this.ShowSaveAlert = show;
-                this.SaveResultMsg = msg;
+            this.$store.dispatch('managePriorityModule/showErrorMessage',{show:show,message:msg})
         },
-       
-
+    
     }
 
 }
