@@ -2,14 +2,16 @@
     <div>
         <b-container fluid>
              <b-row class="justify-content-md-center w-100">
-                 <b-col cols="5">
+                 <b-col cols="5" class="userlist">
+
                      <user-project-list id="userNotProject" 
                      v-bind:UserType="UserTypeNot"
                      v-bind:UserItem="this.UserNotProject"></user-project-list>
+
                  </b-col>
                  <b-col cols="1">
                  </b-col>
-                 <b-col cols="5">
+                 <b-col cols="5" class="userlist">
                      <user-project-list id="userInProject" 
                      v-bind:UserType="UserTypeIn"
                      v-bind:UserItem="this.UserInProject"></user-project-list>
@@ -27,9 +29,6 @@ export default {
         return {
             AllUserCount:null,
             UserProjectCount:null,
-            AlluserList:[],
-            UserNotProjectList:[],
-            UserInProjectList:[],
             UserTypeNot:"NotIn",
             UserTypeIn:"In",
             
@@ -51,5 +50,10 @@ export default {
 }
 </script>
 <style scoped>
-
+    .userlist
+    {
+        border-color: #f3f3f3;
+        border-style: solid;
+        border-radius: 15px;
+    }
 </style>

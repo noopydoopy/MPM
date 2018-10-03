@@ -45,6 +45,14 @@
                         <label class="float-left">{{ProjectManageData.taskActiveCount}}</label>
                     </div>
                 </div>
+                <div class="row justify-content-md-center mt-2 float-center">
+                    <div class="col col-md-2">                      
+                    </div>
+                    <div class="col col-md-4">
+                        <b-button class="float-left mr-2" variant="success" @click="saveProject">Save</b-button>
+                        <b-button class="float-left" variant="danger" @click="showModal" v-b-modal.modalRef>Cancel</b-button>
+                    </div>  
+                </div>
                 </div>
             </div>
             <div>
@@ -59,7 +67,15 @@
             </div>
 
         </nav-layout>
+        <b-modal 
+            id="modalRef"
+            ref="modalRef"
+            title= ""          
+            @ok="rollback">
+            {{this.modalDetail}}             
+        </b-modal>
     </div>
+    
 </template>
 <script>
 import userProjectControl from '@/components/Project/UserProject'
@@ -83,6 +99,8 @@ export default {
         IsActive : true,
         TaskCount:null,
         TaskActive:null,
+        modalDetail:"",
+        modalTitle:""
       };
   },
   mounted() {
@@ -100,6 +118,19 @@ export default {
           this.LoadProject(proId);
           this.LoadUserNotInProject(proId);
           this.LoadUserInProject(proId);
+      },
+      saveProject()
+      {
+          this.$store.dispatch('manageProjectModule/saveProjectDate');          
+      },
+      showModal()
+      {
+            this.modalDetail ="Do you want to reset your changed data?";
+            this.modalTitle = "Confirm to reset changed";
+      },
+      rollback()
+      {
+          this.InitData(this.ProjectId);
       },
       LoadProject(proId)
         {

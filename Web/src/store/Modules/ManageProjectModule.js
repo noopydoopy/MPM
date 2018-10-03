@@ -4,6 +4,8 @@ const type = {
     requestUserNotProjectList: 'USER_REQUEST_USER_NOT_IN_PROJECT',
     requestUserInProjectList: 'USER_REQUEST_USER_IN_PROJECT',
     requestProjectManageData: 'PROJECT_REQUEST_PROJECTDATA',
+    addUserInProject: 'USER_ADD_TO_PROJECT',
+    romoveUserInProject: 'USER_REMOVE_FROM_PROJECT',
 }
 const state = {
     userNotProjectList:[],
@@ -34,6 +36,20 @@ const actions = {
         let user = await userService.loadUserInProject(projectId)
         commit(type.requestUserInProjectList,user.data )
     },
+    async requestAddUserToProject({state, commit},userId) {
+        commit(type.addUserInProject,userId)
+    },
+    async requestRemoveUserFromProject({state, commit},userId) {
+        commit(type.romoveUserInProject,userId)
+    },
+    async saveProjectDate({state, commit})
+    {
+
+    },
+    async saveUserProjectDate({state, commit},userList)
+    {
+
+    },
 }
 const mutations = {
     [type.requestUserNotProjectList](state, items) {
@@ -45,7 +61,42 @@ const mutations = {
     [type.requestProjectManageData](state, items) {
         state.projectManageData = items
     },
+    [type.addUserInProject](state, userId) {
+        
+        var userInProject = state.userInProjectList.find(u => u.userId === userId)    
+        if(!userInProject)
+        {
+            var index = state.userNotProjectList.findIndex(u => u.userId === userId) 
+            if(index>=0)
+            {
+                var userMove = state.userNotProjectList[index]          
+                state.userInProjectList.push(userMove)
+                state.userNotProjectList.splice(index,1) 
+               // state.userInProjectList.sort(function(a, b) {
+                //    return a.userId - b.userId;
+                //  });            
+            }
+        }
+    },
+    [type.romoveUserInProject](state, userId) {
+        
+        var userNotInProject = state.userNotProjectList.find(u => u.userId === userId)    
+        if(!userNotInProject)
+        {
+            var index = state.userInProjectList.findIndex(u => u.userId === userId) 
+            if(index>=0)
+            {
+                var userMove = state.userInProjectList[index]          
+                state.userNotProjectList.push(userMove)
+                state.userInProjectList.splice(index,1) 
+               // state.userNotProjectList.sort(function(a, b) {
+              //      return a.userId - b.userId;
+               //   });            
+            }
+        }
+    },
 }
+
 export default {
     namespaced: true,
     state,
