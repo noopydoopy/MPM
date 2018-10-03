@@ -74,6 +74,19 @@
             @ok="rollback">
             {{this.modalDetail}}             
         </b-modal>
+        <b-modal 
+            id="modalComplete"
+            ref="modalComplete"
+            title= ""  
+            hide-footer>
+
+            <div class="modelCompleteData pb-3">
+                <span> {{this.modalCompleteDetail}} </span>  
+            </div>
+            <div>
+                <b-button class="mt-3 float-right" variant="success"  @click="hideModalComplete">OK</b-button> 
+            </div>     
+        </b-modal>
     </div>
     
 </template>
@@ -100,19 +113,20 @@ export default {
         TaskCount:null,
         TaskActive:null,
         modalDetail:"",
-        modalTitle:""
+        modalTitle:"",
+        modalCompleteDetail:""
       };
   },
   mounted() {
       if(this.$route.params.projectId != null && this.$route.params.projectId >0)
       {
           this.ProjectId = this.$route.params.projectId;
-          this.InitData(this.ProjectId);
-         
+          this.InitData(this.ProjectId);        
       }
      },
   methods:
   {
+
       InitData(proId)
       {
           this.LoadProject(proId);
@@ -121,12 +135,23 @@ export default {
       },
       saveProject()
       {
-          this.$store.dispatch('manageProjectModule/saveProjectDate');          
+          this.$store.dispatch('manageProjectModule/saveProjectDate'); 
+          this.$store.dispatch('manageProjectModule/saveUserProjectDate');  
+          this.showModalComplete();        
       },
       showModal()
       {
             this.modalDetail ="Do you want to reset your changed data?";
             this.modalTitle = "Confirm to reset changed";
+      },
+      showModalComplete()
+      {
+          this.modalCompleteDetail = "Save project success";
+          this.$refs.modalComplete.show();
+      },
+     hideModalComplete()
+      {
+          this.$refs.modalComplete.hide();
       },
       rollback()
       {
@@ -156,3 +181,11 @@ export default {
 
 }
 </script>
+<style scoped>
+    .modelCompleteData
+    {
+        border-bottom-style: solid;
+        border-bottom-width: thin;
+        border-bottom-color: #e0e0e0bd;
+    }
+</style>

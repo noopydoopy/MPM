@@ -14,5 +14,6 @@ namespace MPM.Repository.Interfaces
         void AddUserProject(UserProject userProject);
         void UpdateUserProject(UserProject userProject);
         void DeleteUserProject(int userProjectId);
+        void AddUserToUserProject(int projectId, List<int> userList);
     }
 }

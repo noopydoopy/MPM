@@ -1,5 +1,6 @@
 import projectService from '@/api/ProjectService'
 import userService from '@/api/UserService'
+import userProjectService from '@/api/UserProjectServices';
 const type = {
     requestUserNotProjectList: 'USER_REQUEST_USER_NOT_IN_PROJECT',
     requestUserInProjectList: 'USER_REQUEST_USER_IN_PROJECT',
@@ -44,11 +45,19 @@ const actions = {
     },
     async saveProjectDate({state, commit})
     {
-
+        await projectService.updateProject(state.projectManageData.projectId,state.projectManageData.projectName,state.projectManageData.projectIsActive)
     },
-    async saveUserProjectDate({state, commit},userList)
+    async saveUserProjectDate({state, commit})
     {
-
+        let userList = []
+        if(state.userInProjectList.length >0)
+        {
+            for (var i = 0; i < state.userInProjectList.length; i++)
+            {
+                userList.push(state.userInProjectList[i].userId);
+            }
+        }   
+        await userProjectService.saveUserProject(state.projectManageData.projectId,userList);
     },
 }
 const mutations = {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MPM.API.ModelViews;
 using MPM.Databases.Models;
 using MPM.Repository.Interfaces;
 
@@ -110,6 +111,20 @@ namespace MPM.API.Controllers
             userProjectRepository.DeleteUserProject(id);
 
             return Ok(userProject);
+        }
+
+        [HttpPost("SaveUserProject")]
+        public IActionResult SaveUserProject([FromBody] SaveUserProjectModel projectModel)
+        {
+            if(projectModel != null)
+            {
+                userProjectRepository.AddUserToUserProject(projectModel.ProjectId, projectModel.UserIdList);
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
     }
