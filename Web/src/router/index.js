@@ -10,6 +10,7 @@ import TaskList from '@/views/TaskList'
 import ManageUser from '@/views/ManageUser'
 import ManageType from '@/views/ManageType'
 import Dashboard from '@/views/Dashboard'
+import AccessDeniedPage from '@/views/AccessDeniedPage'
 
 Vue.use(Router)
 
@@ -61,6 +62,11 @@ export default new Router({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard
+    },
+    {
+      path:'/forbidden',
+      name:'AccessDenied',
+      component: AccessDeniedPage
     },
     {
       path: '/about',

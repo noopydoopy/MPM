@@ -79,7 +79,15 @@ export default {
 
     mounted() {
         this.$emit('page-change', this.$route.name)
+        if(!this.hasPermission)
+        {
+            this.$router.push({ path: "/forbidden" });
+        }
         this.loadPriority();
+        
+    },
+    updated() {
+        
     },
     data: function () {
         return {
@@ -95,12 +103,27 @@ export default {
             PriorityListItem: 'managePriorityModule/priorityItem',
             ShowEdit: 'managePriorityModule/showEdit',
             ShowSaveAlert: 'managePriorityModule/showSaveAlert',
-            SaveResultMsg: 'managePriorityModule/saveResultMsg'
-            })
+            SaveResultMsg: 'managePriorityModule/saveResultMsg',
+            tokenHeader:'authenticationModule/header',
+            userLogin:'authenticationModule/user',
+            }),
+
+        hasPermission()
+        {
+            if(this.userLogin)
+            {
+                if(this.userLogin.isAdmin)
+                {
+                    return true;
+                }
+            }
+            else return false;
+        }
     },
     
     methods:
     {
+        
         loadPriority()
         {
             this.$store.dispatch('managePriorityModule/requestPriorityListItem')

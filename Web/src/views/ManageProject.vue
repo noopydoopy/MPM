@@ -129,9 +129,11 @@ export default {
 
       InitData(proId)
       {
+          
           this.LoadProject(proId);
           this.LoadUserNotInProject(proId);
           this.LoadUserInProject(proId);
+ 
       },
       saveProject()
       {
@@ -175,7 +177,9 @@ export default {
        ...mapGetters({
             UserNotProjectList: 'manageProjectModule/userNotProjectList',
             UserInProjectList: 'manageProjectModule/userInProjectList',
-            ProjectManageData: 'manageProjectModule/projectManageData'
+            ProjectManageData: 'manageProjectModule/projectManageData',
+            tokenHeader:'authenticationModule/header',
+            userLogin:'authenticationModule/user',
             })
     },
 
