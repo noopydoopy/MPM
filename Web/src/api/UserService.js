@@ -13,7 +13,6 @@ export default {
         return axios.put(url, user);
     },
     logIn(authen) {
-        console.log(authen)
         var url = this.data().apiHost + "/api/Users/authentication"
         return axios.post(url, authen);
     },
