@@ -16,6 +16,17 @@ const getters = {
     },
     user(state, getters) {
         return state.user;
+    },
+    userIsAdmin()
+    {
+        if(state.user)
+        {
+            if(state.user.isAdmin)
+            {
+                return true;
+            }
+        }
+        else return false;
     }
 }
 

@@ -79,7 +79,7 @@ export default {
 
     mounted() {
         this.$emit('page-change', this.$route.name)
-        if(!this.hasPermission)
+        if(!this.userIsAdmin)
         {
             this.$router.push({ path: "/forbidden" });
         }
@@ -106,19 +106,8 @@ export default {
             SaveResultMsg: 'managePriorityModule/saveResultMsg',
             tokenHeader:'authenticationModule/header',
             userLogin:'authenticationModule/user',
+            userIsAdmin:'authenticationModule/userIsAdmin',
             }),
-
-        hasPermission()
-        {
-            if(this.userLogin)
-            {
-                if(this.userLogin.isAdmin)
-                {
-                    return true;
-                }
-            }
-            else return false;
-        }
     },
     
     methods:
