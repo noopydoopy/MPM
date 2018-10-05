@@ -46,6 +46,9 @@ export default {
   beforeUpdate() {
     this.$store.dispatch("authenticationModule/setAuthenticationStore");
     // this.$emit('page-change', this.$route.path)
+  },
+  mounted() {
+    this.$store.dispatch("authenticationModule/setAuthenticationStore");
   }
 };
 </script>

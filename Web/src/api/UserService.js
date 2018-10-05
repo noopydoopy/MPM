@@ -20,6 +20,10 @@ export default {
         var url = this.data().apiHost + "/api/Users/resetPasswordCode/" + code;
         return axios.get(url);
     },
+    sendEmailResetPassword(user) {
+        var url = this.data().apiHost + "/api/Users/resetpassword";
+        return axios.post(url, user);
+    },
     getUserByUserId(id) {
         var url = this.data().apiHost + "/api/Users/code/" + code;
         return axios.get(url);

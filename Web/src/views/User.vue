@@ -2,7 +2,7 @@
     <div>
         <nav-layout>
         
-        <component :is="component" v-bind:user="user" @update-user="updateUser"></component>
+        <component :is="component" v-bind:user="user" v-bind:isEmailFound="isEmailFound" @update-user="updateUser" @send-email-reset-password="sendEmailResetPassword"></component>
         </nav-layout>
     </div>
 </template>
@@ -12,7 +12,9 @@ import Profile from "@/components/User/Profile";
 import UserList from "@/components/User/UserList";
 import UserDetailUpdate from "@/components/User/UserDetailUpdate";
 import UserDetailUpdateError from "@/components/User/UserDetailUpdateError";
-import userResetPassword from "@/components/User/UserResetPassword";
+import UserResetPassword from "@/components/User/UserResetPassword";
+import UserRequestResetPassword from "@/components/User/UserRequestResetPassword";
+import UserRequestResetPasswordSend from "@/components/User/UserRequestResetPasswordSend";
 import userService from "@/api/UserService";
 
 export default {
@@ -20,12 +22,15 @@ export default {
     Profile,
     UserList,
     UserDetailUpdate,
-    userResetPassword,
+    UserResetPassword,
+    UserRequestResetPassword,
+    UserRequestResetPasswordSend,
     UserDetailUpdateError
   },
   data: () => ({
     component: "profile",
-    user: {}
+    user: {},
+    isEmailFound: true 
   }),
   mounted() {
     console.log(this.$route.params.mode);
@@ -63,6 +68,10 @@ export default {
           }
         }
       );
+    }else if (this.$route.params.mode === "requestResetPassword"){
+      this.component = "user-request-reset-password";
+    }else if (this.$route.params.mode === "requestResetPasswordSend"){
+      this.component = "user-request-reset-password-send";
     }
   },
   methods: {
@@ -72,6 +81,18 @@ export default {
           this.$router.push({ path: "/login" });
         },
         error => {
+          console.log(error);
+        }
+      )
+    },
+    sendEmailResetPassword: function(user) {
+      userService.sendEmailResetPassword(user).then(
+        response => {
+          this.isEmailFound = true
+          this.$router.push({ path: "/user/requestResetPasswordSend" });
+        },
+        error => {
+          this.isEmailFound = false
           console.log(error);
         }
       )

@@ -179,6 +179,36 @@ namespace MPM.Repository
             return userProjectManageModel;
         }
 
+        public User ResetPassword(String email)
+        {
+            var query = from User in _context.User
+                        where User.Email == email
+                        select User;
+            User user = query.FirstOrDefault();
+
+            if (user != null) { 
+                Guid guid = Guid.NewGuid();
+                var newCode = guid.ToString();
+                user.Code = newCode;
+
+                try
+                {
+                    _context.Entry(user).State = EntityState.Modified;
+                    _context.SaveChanges();
+                    return user;
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+        }
+
         public string EncryptString(string Message)
         {
             byte[] Results;

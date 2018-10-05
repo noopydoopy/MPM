@@ -21,11 +21,24 @@ const getters = {
 
 const actions = {
     async setAuthenticationStore({ state, commit }) {
-        let token = JSON.parse(localStorage.getItem("token"));
-        let rememberMe = JSON.parse(localStorage.getItem("rememberMe"));
+        let token = localStorage.getItem("token");
+        let rememberMe = localStorage.getItem("rememberMe");
         let refreshToken = null;
         let refreshTokenExpire = null;
         let now = new Date();
+
+        if (token) {
+            token = decodeURIComponent(atob(token).split('').map(function (c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+            token = JSON.parse(token);
+        }
+        if (rememberMe) {
+            rememberMe = decodeURIComponent(atob(rememberMe).split('').map(function (c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+            rememberMe = JSON.parse(rememberMe);
+        }
 
         if (token) {
             let tokenExpiryDate = new Date(token.accessTokenExpire)

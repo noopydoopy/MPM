@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MPM.Databases.Models;
 using MPM.Model;
 using MPM.Repository.Interfaces;
+using MPM.Services.Interfaces;
 
 namespace MPM.API.Controllers
 {
@@ -13,10 +15,12 @@ namespace MPM.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserRepository userRepository;
+        private readonly IEmailService _emailService;
 
-        public UsersController(IUserRepository context)
+        public UsersController(IUserRepository context, IEmailService emailService)
         {
             userRepository = context;
+            _emailService = emailService;
         }
 
         // GET: api/Users
@@ -187,6 +191,24 @@ namespace MPM.API.Controllers
         {
             var users = userRepository.GetUserInProject(projectId);
             return users;
+        }
+
+        [HttpPost("resetpassword")]
+        public IActionResult ResetPassword([FromBody] UserModel userModel)
+        {
+            var originHost = Request.Headers["Origin"].ToString();
+
+            User user = userRepository.ResetPassword(userModel.Email);
+            if (user != null)
+            {
+                _emailService.SendEmail(user, "Reset password", originHost);
+                return Ok();
+            }
+            else
+            {
+                return NotFound("Email not found");
+            }
+            
         }
     }
 }

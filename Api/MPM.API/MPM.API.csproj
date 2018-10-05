@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MPM.Databases\MPM.Databases.csproj" />
     <ProjectReference Include="..\MPM.Repository\MPM.Repository.csproj" />
+    <ProjectReference Include="..\MPM.Services\MPM.Services.csproj" />
   </ItemGroup>
 
 </Project>

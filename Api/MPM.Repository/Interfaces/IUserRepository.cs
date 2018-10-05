@@ -18,5 +18,6 @@ namespace MPM.Repository.Interfaces
         UserModel RefreshToken(String refreshToken);
         List<UserProjectManageModel> GetUserNotinProject(int projectId);
         List<UserProjectManageModel> GetUserInProject(int projectId);
+        User ResetPassword(String email);
     }
 }

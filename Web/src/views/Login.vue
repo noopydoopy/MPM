@@ -31,7 +31,7 @@
                           The email or password you entered is incorrect.
                         </b-alert>        
                         <b-form-checkbox id="RememberMe" v-model="remember">Remeber me</b-form-checkbox>              
-                        <b-link to="#">Forget password</b-link><br><br>
+                        <b-link to="/user/requestResetPassword">Forget password</b-link><br><br>
                         <b-button type="submit" size="sm" variant="primary">Submit</b-button> 
                         <span style="margin-left:10px;"></span>
                         <b-button type="reset" size="sm" variant="danger">Reset</b-button>
@@ -69,13 +69,13 @@ export default {
         response => {
           this.isLogin = true;
           if (response.data) {
-            localStorage.setItem("token", JSON.stringify(response.data));
+            localStorage.setItem("token", this.b64EncodeUnicode(JSON.stringify(response.data)));
             if (this.remember) {
               var rememberMe = {
                 refreshToken: response.data.refreshToken,
                 refreshTokenExpire: response.data.refreshTokenExpire
               };
-              localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
+              localStorage.setItem("rememberMe", this.b64EncodeUnicode(JSON.stringify(rememberMe)));
             }
           }
           this.$router.push({ path: "/" });
@@ -90,6 +90,16 @@ export default {
       this.user.email = null;
       this.user.password = null;
       this.remember = false;
+    },
+    b64EncodeUnicode(str) {
+      return btoa(
+        encodeURIComponent(str).replace(
+          /%([0-9A-F]{2})/g,
+          function toSolidBytes(match, p1) {
+            return String.fromCharCode("0x" + p1);
+          }
+        )
+      );
     }
   }
 };

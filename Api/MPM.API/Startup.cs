@@ -10,6 +10,8 @@ using MPM.Databases.Models;
 using MPM.Model;
 using MPM.Repository;
 using MPM.Repository.Interfaces;
+using MPM.Services;
+using MPM.Services.Interfaces;
 using NJsonSchema;
 using NSwag.AspNetCore;
 using System.Reflection;
@@ -30,6 +32,7 @@ namespace MPM.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddTransient<IEmailService, EmailService>();
             services.AddCors();
 
             // configure strongly typed settings objects
