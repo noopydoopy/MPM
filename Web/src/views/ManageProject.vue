@@ -45,6 +45,14 @@
                         <label class="float-left">{{ProjectManageData.taskActiveCount}}</label>
                     </div>
                 </div>
+                <div class="row justify-content-md-center mt-2 float-center">
+                    <div class="col col-md-2">                      
+                    </div>
+                    <div class="col col-md-4">
+                        <b-button class="float-left mr-2" variant="success" @click="saveProject">Save</b-button>
+                        <b-button class="float-left" variant="danger" @click="showModal" v-b-modal.modalRef>Cancel</b-button>
+                    </div>  
+                </div>
                 </div>
             </div>
             <div>
@@ -59,7 +67,28 @@
             </div>
 
         </nav-layout>
+        <b-modal 
+            id="modalRef"
+            ref="modalRef"
+            title= ""          
+            @ok="rollback">
+            {{this.modalDetail}}             
+        </b-modal>
+        <b-modal 
+            id="modalComplete"
+            ref="modalComplete"
+            title= ""  
+            hide-footer>
+
+            <div class="modelCompleteData pb-3">
+                <span> {{this.modalCompleteDetail}} </span>  
+            </div>
+            <div>
+                <b-button class="mt-3 float-right" variant="success"  @click="hideModalComplete">OK</b-button> 
+            </div>     
+        </b-modal>
     </div>
+    
 </template>
 <script>
 import userProjectControl from '@/components/Project/UserProject'
@@ -83,23 +112,52 @@ export default {
         IsActive : true,
         TaskCount:null,
         TaskActive:null,
+        modalDetail:"",
+        modalTitle:"",
+        modalCompleteDetail:""
       };
   },
   mounted() {
       if(this.$route.params.projectId != null && this.$route.params.projectId >0)
       {
           this.ProjectId = this.$route.params.projectId;
-          this.InitData(this.ProjectId);
-         
+          this.InitData(this.ProjectId);        
       }
      },
   methods:
   {
+
       InitData(proId)
       {
+          
           this.LoadProject(proId);
           this.LoadUserNotInProject(proId);
           this.LoadUserInProject(proId);
+ 
+      },
+      saveProject()
+      {
+          this.$store.dispatch('manageProjectModule/saveProjectDate'); 
+          this.$store.dispatch('manageProjectModule/saveUserProjectDate');  
+          this.showModalComplete();        
+      },
+      showModal()
+      {
+            this.modalDetail ="Do you want to reset your changed data?";
+            this.modalTitle = "Confirm to reset changed";
+      },
+      showModalComplete()
+      {
+          this.modalCompleteDetail = "Save project success";
+          this.$refs.modalComplete.show();
+      },
+     hideModalComplete()
+      {
+          this.$refs.modalComplete.hide();
+      },
+      rollback()
+      {
+          this.InitData(this.ProjectId);
       },
       LoadProject(proId)
         {
@@ -119,9 +177,19 @@ export default {
        ...mapGetters({
             UserNotProjectList: 'manageProjectModule/userNotProjectList',
             UserInProjectList: 'manageProjectModule/userInProjectList',
-            ProjectManageData: 'manageProjectModule/projectManageData'
+            ProjectManageData: 'manageProjectModule/projectManageData',
+            tokenHeader:'authenticationModule/header',
+            userLogin:'authenticationModule/user',
             })
     },
 
 }
 </script>
+<style scoped>
+    .modelCompleteData
+    {
+        border-bottom-style: solid;
+        border-bottom-width: thin;
+        border-bottom-color: #e0e0e0bd;
+    }
+</style>

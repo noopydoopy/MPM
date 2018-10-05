@@ -76,5 +76,44 @@ namespace MPM.Repository
                 throw;
             }
         }
+        public void AddUserToUserProject(int projectId,List<int> userList )
+        {
+            try
+            {
+                List<UserProject> oldUserprojects = _context.UserProject.Where(up => up.ProjectId == projectId).ToList();
+                List<UserProject> deleteUserProject = new List<UserProject>();
+                List<UserProject> addUserProject = new List<UserProject>();
+                List<int> userAdds = new List<int>();
+                deleteUserProject = oldUserprojects.Where(up => !userList.Contains(up.UserId)).ToList();
+                userAdds = userList.Where(u => !oldUserprojects.Any(up => up.UserId == u)).ToList();
+
+                if(userAdds.Count >0)
+                {
+                    foreach (var userId in userAdds)
+                    {
+                        UserProject UserProject = new UserProject();
+                        UserProject.ProjectId = projectId;
+                        UserProject.UserId = userId;
+                        addUserProject.Add(UserProject);
+                    }
+                }
+
+                if(deleteUserProject != null && deleteUserProject.Count > 0)
+                {
+                    _context.UserProject.RemoveRange(deleteUserProject);
+                    _context.SaveChanges();
+                }
+                if(addUserProject != null && addUserProject.Count > 0)
+                {
+                    _context.UserProject.AddRange(addUserProject);
+                    _context.SaveChanges();
+                }
+
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }
