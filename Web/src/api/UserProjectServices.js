@@ -16,5 +16,10 @@ export default {
             UserIdList: userList
         }
         return axios.post(url,requestBody,config); 
+    },
+    getUserProjectByUserId(userId)
+    {
+        const url = this.data().apiHost  +'/api/UserProjects/GetUserProjectByUserId/'+userId;
+        return axios.get(url);
     }
 }
