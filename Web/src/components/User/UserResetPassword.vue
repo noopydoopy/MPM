@@ -1,6 +1,6 @@
 <template>
     <div>
-        <wide-layout>
+      <br>
         <b-container>
             <b-card class="text-left">
                 <b-card-header>Reset Password</b-card-header>
@@ -35,7 +35,6 @@
                 </b-card-body>
             </b-card>
         </b-container>
-        </wide-layout>
     </div>
 </template>
 

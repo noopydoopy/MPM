@@ -25,7 +25,7 @@ export default {
         return axios.post(url, user);
     },
     getUserByUserId(id) {
-        var url = this.data().apiHost + "/api/Users/code/" + code;
+        var url = this.data().apiHost + "/api/Users/" + id;
         return axios.get(url);
     },
     updateUser(user) {
