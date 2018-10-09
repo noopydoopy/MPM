@@ -21,10 +21,21 @@ const items = [
   {  project_name: 'Diabase', isActive: true  }
 ]
 
+import { mapGetters } from "vuex";
 export default {
     data () {
     return {
       items: items
+    }
+  },
+  computed: {
+    ...mapGetters({
+      user: "authenticationModule/user"
+    })
+  },
+  mounted() {
+    if(this.user==null){
+      this.$router.push({ path: "/login" });
     }
   }
 }

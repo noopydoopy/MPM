@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import User from '@/views/User'
 import ManagePriority from '@/views/ManagePriority'
@@ -20,8 +19,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: 'dashboard',
+      component: Dashboard
     },
     {
       path: '/login',
@@ -57,11 +56,6 @@ export default new Router({
       path: '/admin/managetype',
       name: 'managetype',
       component: ManageType
-    },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard
     },
     {
       path:'/forbidden',

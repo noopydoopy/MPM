@@ -3,7 +3,7 @@
     <nav-layout>
         <h2> Manange User </h2>
       <b-container class="text-left">  
-        <b-form @submit="onSubmit">
+        <b-form @submit="onSubmit" @cancel="onCancel">
 
       <b-form-group id="usernameGroup"
                     label="Your Username:"
@@ -54,7 +54,7 @@
     </b-form-checkbox>
     </b-form-group>
       <b-button type="submit" variant="primary">Save</b-button>
-      <b-button type="reset" variant="danger">Cancel</b-button>
+      <b-button type="cancel" variant="danger">Cancel</b-button>
     </b-form>
 
     </b-container>
@@ -98,7 +98,7 @@ export default {
         }
       )
     },
-    onReset (evt) {
+    onCancel (evt) {
       evt.preventDefault();
       this.$router.push({ path: "/user/list" });
     }

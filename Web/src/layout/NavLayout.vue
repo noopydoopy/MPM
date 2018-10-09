@@ -9,8 +9,7 @@
             <b-collapse is-nav id="nav_collapse" class="text-left">
 
                 <b-navbar-nav >
-                <b-nav-item href="#"><router-link to="/">Home</router-link> </b-nav-item>
-                <b-nav-item href="#"><router-link to="/dashboard">Dashboard</router-link> </b-nav-item>
+                <b-nav-item href="#"><router-link to="/">Dashboard</router-link> </b-nav-item>
                 <b-nav-item href="#"><router-link to="/about">About</router-link></b-nav-item>
                 <b-nav-item-dropdown v-if=userIsAdmin>
                     <template slot="button-content">

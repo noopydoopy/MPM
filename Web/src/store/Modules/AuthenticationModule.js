@@ -87,13 +87,23 @@ const actions = {
                 await userService.logIn(user).then(
                     response => {
                         if (response.data) {
-                            localStorage.setItem("token", JSON.stringify(response.data))
+                            localStorage.setItem("token", encodeURIComponent(response.data).replace(
+                                /%([0-9A-F]{2})/g,
+                                function toSolidBytes(match, p1) {
+                                  return String.fromCharCode("0x" + p1);
+                                }
+                              ))
                             if (rememberMe) {
                                 var rememberMe = {
                                     refreshToken: response.data.refreshToken,
                                     refreshTokenExpire: response.data.refreshTokenExpire
-                                };
-                                localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
+                                }
+                                localStorage.setItem("rememberMe", encodeURIComponent(rememberMe).replace(
+                                    /%([0-9A-F]{2})/g,
+                                    function toSolidBytes(match, p1) {
+                                      return String.fromCharCode("0x" + p1);
+                                    }
+                                  ))
                             }
                         }
                         commit(type.updateAuthenticationStore, response.data)
