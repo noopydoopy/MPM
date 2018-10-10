@@ -17,12 +17,9 @@ const getters = {
     user(state, getters) {
         return state.user;
     },
-    userIsAdmin()
-    {
-        if(state.user)
-        {
-            if(state.user.isAdmin)
-            {
+    userIsAdmin() {
+        if (state.user) {
+            if (state.user.isAdmin) {
                 return true;
             }
         }
@@ -40,14 +37,14 @@ const actions = {
 
         if (token) {
             token = decodeURIComponent(atob(token).split('').map(function (c) {
-                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                    }).join(''));
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
             token = JSON.parse(token);
         }
         if (rememberMe) {
             rememberMe = decodeURIComponent(atob(rememberMe).split('').map(function (c) {
-                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                    }).join(''));
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
             rememberMe = JSON.parse(rememberMe);
         }
 
@@ -87,23 +84,23 @@ const actions = {
                 await userService.logIn(user).then(
                     response => {
                         if (response.data) {
-                            localStorage.setItem("token", encodeURIComponent(response.data).replace(
+                            localStorage.setItem("token", btoa(encodeURIComponent(response.data).replace(
                                 /%([0-9A-F]{2})/g,
                                 function toSolidBytes(match, p1) {
-                                  return String.fromCharCode("0x" + p1);
+                                    return String.fromCharCode("0x" + p1);
                                 }
-                              ))
+                            )))
                             if (rememberMe) {
                                 var rememberMe = {
                                     refreshToken: response.data.refreshToken,
                                     refreshTokenExpire: response.data.refreshTokenExpire
                                 }
-                                localStorage.setItem("rememberMe", encodeURIComponent(rememberMe).replace(
+                                localStorage.setItem("rememberMe", btoa(encodeURIComponent(rememberMe).replace(
                                     /%([0-9A-F]{2})/g,
                                     function toSolidBytes(match, p1) {
-                                      return String.fromCharCode("0x" + p1);
+                                        return String.fromCharCode("0x" + p1);
                                     }
-                                  ))
+                                )))
                             }
                         }
                         commit(type.updateAuthenticationStore, response.data)

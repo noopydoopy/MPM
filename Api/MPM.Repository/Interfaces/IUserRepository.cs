@@ -11,7 +11,7 @@ namespace MPM.Repository.Interfaces
         User GetUserById(int userId);
         User GetUserByCode(String code);
         User GetUserResetPasswordByCode(String code);
-        void AddUser(User user);
+        User AddUser(User user);
         void UpdateUser(User user);
         void DeleteUser(int userId);
         UserModel Authenticate(string username, string password);

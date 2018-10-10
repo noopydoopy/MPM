@@ -20,7 +20,7 @@ namespace MPM.Services
             _env = env;
         }
 
-        public async Task SendEmail(User user, string subject, string host)
+        public async Task SendRestPasswordEmail(User user, string subject, string host)
         {
             using (var client = new SmtpClient())
             {
@@ -65,9 +65,49 @@ namespace MPM.Services
             await Task.CompletedTask;
         }
 
-        public Task SendEmail(string email, string message)
+        public async Task SendConfirmEmail(User user, string subject, string host)
         {
-            throw new System.NotImplementedException();
+            using (var client = new SmtpClient())
+            {
+                var credential = new NetworkCredential
+                {
+                    UserName = _configuration["Email:Email"],
+                    Password = _configuration["Email:Password"]
+                };
+
+                client.Credentials = credential;
+                client.Host = _configuration["Email:Host"];
+                client.Port = int.Parse(_configuration["Email:Port"]);
+                client.EnableSsl = true;
+
+                var webRoot = _env.WebRootPath;
+                var pathToFile = _env.WebRootPath
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "Templates"
+                            + Path.DirectorySeparatorChar.ToString()
+                            + "ActiveUserTemplate.html";
+
+                var builder = new BodyBuilder();
+                using (StreamReader SourceReader = System.IO.File.OpenText(pathToFile))
+                {
+                    builder.HtmlBody = SourceReader.ReadToEnd();
+                }
+                string messageBody = string.Format(builder.HtmlBody);
+                var url = host + "/user/update?code=" + user.Code;
+                messageBody = messageBody.Replace("username", user.Name);
+                messageBody = messageBody.Replace("verifytUrl", url);
+
+                using (var emailMessage = new MailMessage())
+                {
+                    emailMessage.To.Add(new MailAddress(user.Email));
+                    emailMessage.From = new MailAddress(_configuration["Email:Email"]);
+                    emailMessage.Subject = subject;
+                    emailMessage.IsBodyHtml = true;
+                    emailMessage.Body = messageBody;
+                    client.Send(emailMessage);
+                }
+            }
+            await Task.CompletedTask;
         }
     }
 }

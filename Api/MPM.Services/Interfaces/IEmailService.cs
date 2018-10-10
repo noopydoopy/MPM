@@ -7,6 +7,7 @@ namespace MPM.Services.Interfaces
 {
     public interface IEmailService
     {
-       Task SendEmail(User user, string subject, string message);
+       Task SendRestPasswordEmail(User user, string subject, string message);
+       Task SendConfirmEmail(User user, string subject, string message);
     }
 }

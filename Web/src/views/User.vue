@@ -15,6 +15,7 @@ import UserDetailUpdateError from "@/components/User/UserDetailUpdateError";
 import UserResetPassword from "@/components/User/UserResetPassword";
 import UserRequestResetPassword from "@/components/User/UserRequestResetPassword";
 import UserRequestResetPasswordSend from "@/components/User/UserRequestResetPasswordSend";
+import UserCreateNewUser from "@/components/User/UserCreateNewUser";
 import userService from "@/api/UserService";
 
 export default {
@@ -25,6 +26,7 @@ export default {
     UserResetPassword,
     UserRequestResetPassword,
     UserRequestResetPasswordSend,
+    UserCreateNewUser,
     UserDetailUpdateError
   },
   data: () => ({
@@ -72,6 +74,8 @@ export default {
       this.component = "user-request-reset-password";
     }else if (this.$route.params.mode === "requestResetPasswordSend"){
       this.component = "user-request-reset-password-send";
+    }else if (this.$route.params.mode === "createNewUser"){
+      this.component = "user-create-new-user";
     }
   },
   methods: {

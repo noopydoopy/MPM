@@ -29,12 +29,16 @@ namespace MPM.Repository
             _refreshTokenRepository = refreshTokenContext;
         }
 
-        public void AddUser(User user)
+        public User AddUser(User user)
         {
+            Guid guid = Guid.NewGuid();
+            var newCode = guid.ToString();
+            user.Code = newCode;
             try
             {
                 _context.User.Add(user);
                 _context.SaveChanges();
+                return user;
             }
             catch
             {

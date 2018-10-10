@@ -1,12 +1,15 @@
 <template>
+<div>
+        <template>
     <div>
         <h3>
             UserList
         </h3>
-        <b-container>
+    <b-container>
+      
     <!-- User Interface controls -->
     <b-row>
-      <b-col md="6" class="my-1">
+      <b-col md="5" class="my-1">
         <b-form-group horizontal label="Filter" class="mb-0">
           <b-input-group>
             <b-form-input v-model="filter" placeholder="Type to Search" />
@@ -16,13 +19,18 @@
           </b-input-group>
         </b-form-group>
       </b-col>
-      <b-col md="6" class="my-1">
+      <b-col md="5" class="my-1">
         <b-form-group horizontal label="Per page" class="mb-0">
           <b-form-select :options="pageOptions" v-model="perPage" />
         </b-form-group>
       </b-col>
+      <b-col md="2" class="my-1">
+        <b-button size="sm" @click="CreateNewUser()" class="btn btn-info" style="float: right;" >
+            Create New User
+        </b-button>
+      </b-col>
     </b-row>
-    
+
     <!-- Main table element -->
     <b-table show-empty
              stacked="md"
@@ -45,6 +53,11 @@
           Edit Info
         </b-button>
       </template>
+      <template slot="delete" slot-scope="row">
+        <b-button size="sm" v-b-modal.typeModal @click="OpenTypeModal(row.item)" class="btn btn btn-danger">
+          Delete Row
+        </b-button>
+      </template>
     </b-table>
 
     <b-row>
@@ -54,71 +67,96 @@
     </b-row>
   </b-container>
     </div>
+    </template>
+    <b-modal  id="typeModal"
+            title="Confirm Remove"
+            @ok="ConfirmDelete(userDelete.userId)">
+                Do you sure to Remove {{userDelete.name}}
+        </b-modal>
+    </div>
 </template>
+
 <script>
-import axios from 'axios'
+import userService from "@/api/UserService";
 
 export default {
-  data () {
+  data() {
     return {
       users: [],
       fields: [
-        { key: 'name', label: 'Name', sortable: true, sortDirection: 'desc' },
-        { key: 'email', label: 'Email', sortable: true, 'class': 'text-center' },
-        { key: 'isActive', label: 'is Active' },
-        { key: 'isAdmin', label: 'is Admin' },
-        { key: 'actions', label: 'Actions' }
+        { key: "name", label: "Name", sortable: true, sortDirection: "desc" },
+        { key: "email", label: "Email", sortable: true, class: "text-center" },
+        { key: "isActive", label: "is Active" },
+        { key: "isAdmin", label: "is Admin" },
+        { key: "actions", label: "Actions" },
+        { key: "delete", label: "Delete" }
       ],
       currentPage: 1,
       perPage: 5,
       //totalRows: 0,
-      pageOptions: [ 5, 10, 15 ],
+      pageOptions: [5, 10, 15],
       sortBy: null,
       sortDesc: false,
-      sortDirection: 'asc',
-      filter: null
-    }
+      sortDirection: "asc",
+      filter: null,
+      userDelete: {name:null}
+    };
   },
   computed: {
-    sortOptions () {
+    sortOptions() {
       // Create an options list from our fields
-      return this.fields
-        .filter(f => f.sortable)
-        .map(f => { return { text: f.label, value: f.key } })
+      return this.fields.filter(f => f.sortable).map(f => {
+        return { text: f.label, value: f.key };
+      });
     },
     totalRows: {
-    // getter
-        get: function () {
-        return this.users.length
-        },
-        // setter
-        set: function (newValue) {
-
-        }
+      // getter
+      get: function() {
+        return this.users.length;
+      },
+      // setter
+      set: function(newValue) {}
     }
     // totalRows(){
     //     return this.users.length
     // }
   },
   methods: {
-    onFiltered (filteredItems) {
+    onFiltered(filteredItems) {
       // Trigger pagination to update the number of buttons/pages due to filtering
-      this.totalRows = filteredItems.length
-      this.currentPage = 1
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
     },
-    loadData () {
-        var vm = this;
-        axios({
-            method:'get',
-            url:'https://localhost:44382/api/users',
-            responseType:'json'
-        }).then(function (response) {
-            vm.users =  response.data;
-        });
+    OpenTypeModal(user, index) {
+      this.userDelete = user
+    },
+    ConfirmDelete(id) {
+      
+      var vm = this;
+      userService.deleteUser(id).then(
+        response => {
+          var index = this.users.indexOf(this.userDelete);
+          this.users.splice(index, 1)
+        },
+        error => {
+          //error
+        }
+      );
+    },
+    CreateNewUser() {
+      this.$router.push({ path: "/user/createNewUser" });
     }
-  },  
+  },
   mounted() {
-    this.loadData();
+    var vm = this;
+    userService.getAllUser().then(
+      response => {
+        vm.users = response.data;
+      },
+      error => {
+        vm.users == null;
+      }
+    );
   }
-}
+};
 </script>

@@ -122,9 +122,17 @@ namespace MPM.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            userRepository.AddUser(user);
-
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+            var originHost = Request.Headers["Origin"].ToString();
+            var userObj = userRepository.AddUser(user);
+            if (userObj != null) {
+                _emailService.SendConfirmEmail(userObj, "Activate User", originHost);
+                return Ok(userObj);
+            }else
+            {
+                return BadRequest(ModelState);
+            }
+        
+            
         }
 
         // DELETE: api/Users/5
@@ -201,7 +209,7 @@ namespace MPM.API.Controllers
             User user = userRepository.ResetPassword(userModel.Email);
             if (user != null)
             {
-                _emailService.SendEmail(user, "Reset password", originHost);
+                _emailService.SendRestPasswordEmail(user, "Reset password", originHost);
                 return Ok();
             }
             else

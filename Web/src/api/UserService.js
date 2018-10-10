@@ -20,6 +20,10 @@ export default {
         var url = this.data().apiHost + "/api/Users/resetPasswordCode/" + code;
         return axios.get(url);
     },
+    getAllUser() {
+        var url = this.data().apiHost + "/api/users";
+        return axios.get(url);
+    },
     sendEmailResetPassword(user) {
         var url = this.data().apiHost + "/api/Users/resetpassword";
         return axios.post(url, user);
@@ -42,4 +46,12 @@ export default {
         const url = this.data().apiHost  +'/api/Users/GetUserInProjectId/'+proId;;
         return axios.get(url);
     },
+    deleteUser(id){
+        const url = this.data().apiHost + "/api/Users/"+id
+        return axios.delete(url);
+    },
+    createNewUser(user){
+        const url = this.data().apiHost + "/api/Users";
+        return axios.post(url, user);
+    }
 }
