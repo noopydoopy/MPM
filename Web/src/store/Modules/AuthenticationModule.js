@@ -1,14 +1,17 @@
 import subtractMinutes from "date-fns/sub_minutes";
 import isAfter from "date-fns/is_after";
 import userService from "@/api/UserService";
+import userProjectService from "@/api/UserProjectServices";
 
 const type = {
-    updateAuthenticationStore: 'UPDATE_AUTHENTICATION_STORE'
+    updateAuthenticationStore: 'UPDATE_AUTHENTICATION_STORE',
+    getUserProjectofCurrentUser:'GET_USERPROJECT_CURRENTUSER'
 }
 
 const state = {
     header: null,
-    user: null
+    user: null,
+    projectOfUser: null
 }
 const getters = {
     header(state, getters) {
@@ -24,11 +27,42 @@ const getters = {
             }
         }
         else return false;
+    },
+    CanAccessProject:(state) => (projectId) => 
+    {
+        let result = false;
+        if(state.user)
+        {
+            if(state.user.isAdmin)
+            {
+                result = true;
+            }
+            else
+            {
+                if(state.projectOfUser)
+                {
+                    if(state.projectOfUser.userId == state.user.userId )
+                    {
+                        var isProject = state.projectOfUser.projectIdList.find(p => p === projectId)  
+                        result = isProject;
+                    }
+                }
+            }
+        }
+      return result;
     }
 }
 
 const actions = {
-    async setAuthenticationStore({ state, commit }) {
+    async getUserProject({ state, commit }) {
+        if(state.user)
+        {
+            let userId = state.user.userId;
+            let userLinkProjectModel = await userProjectService.getUserProjectByUserId(userId);
+            commit(type.getUserProjectofCurrentUser, userLinkProjectModel.data)
+        }
+    },
+    async setAuthenticationStore({ state, commit,dispatch }) {
         let token = localStorage.getItem("token");
         let rememberMe = localStorage.getItem("rememberMe");
         let refreshToken = null;
@@ -118,6 +152,7 @@ const actions = {
             }
         }
     }
+    
 }
 
 const mutations = {
@@ -130,6 +165,10 @@ const mutations = {
                 state.user = null
         }
     },
+    [type.getUserProjectofCurrentUser](state,userLinkProject)
+    {
+        state.projectOfUser = userLinkProject;
+    }
 
 }
 

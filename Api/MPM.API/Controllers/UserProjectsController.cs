@@ -53,6 +53,13 @@ namespace MPM.API.Controllers
             var userProject = userProjectRepository.GetUserProjectByProjectId(projectId);
             return userProject;
         }
+        [HttpGet("GetUserProjectByUserId/{userId}")]
+        public UserLinkProjectModel GetUserProjectByUserId([FromRoute] int userId)
+        {
+            var userProject = userProjectRepository.GetUserProjectByUserId(userId);
+            UserLinkProjectModel ulpModel = new UserLinkProjectModel(userId, userProject);
+            return ulpModel;
+        }
         // PUT: api/UserProjects/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUserProject([FromRoute] int id, [FromBody] UserProject userProject)
