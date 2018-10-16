@@ -4,14 +4,22 @@ import Login from '@/views/Login.vue'
 import User from '@/views/User'
 import ManagePriority from '@/views/ManagePriority'
 import ManageProject from '@/views/ManageProject'
-import Profile from '@/components/User/Profile'
 import TaskList from '@/views/TaskList'
 import ManageUser from '@/views/ManageUser'
 import ManageType from '@/views/ManageType'
 import Dashboard from '@/views/Dashboard'
 import AccessDeniedPage from '@/views/AccessDeniedPage'
+import store from '@/store/index'
 
 Vue.use(Router)
+
+const authMiddleware = (to, from, next) => {
+  let isAdmin = store.getters['authenticationModule/userIsAdmin'];
+  if(isAdmin)
+    return next()
+  else
+    return next('/forbidden');
+}
 
 export default new Router({
   mode: 'history',
@@ -30,7 +38,8 @@ export default new Router({
     {
       path: '/admin/managepriority',
       name: 'ManagePriority',
-      component: ManagePriority
+      component: ManagePriority,
+      beforeEnter: authMiddleware
     },
     {
       path: '/manageproject/:projectId',
@@ -50,12 +59,14 @@ export default new Router({
     {
       path: '/admin/manageuser/:id',
       name: 'manageuser',
-      component: ManageUser
+      component: ManageUser,
+      beforeEnter: authMiddleware
     },
     {
       path: '/admin/managetype',
       name: 'managetype',
-      component: ManageType
+      component: ManageType,
+      beforeEnter: authMiddleware
     },
     {
       path:'/forbidden',
