@@ -8,6 +8,7 @@ import WideLayout from '@/layout/WideLayout'
 import NavLayout from '@/layout/NavLayout'
 
 Vue.use(BootstrapVue)
+Vue.use(require('vue-moment'));
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'

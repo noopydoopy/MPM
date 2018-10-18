@@ -4,9 +4,7 @@
       Dashboard
         <b-table striped hover :items="items">
           <template slot="project_name" slot-scope="data">
-            <a :href="`/tasklist`">
-              {{data.value}}
-            </a>
+            <router-link :to="{ name: 'TaskList', params: { projectId: data.item.id }}">{{data.value}}</router-link>
           </template>
         </b-table>
     </nav-layout>
@@ -15,10 +13,10 @@
 
 <script>
 const items = [
-  {  project_name: 'Harmonie', isActive: true },
-  {  project_name: 'GBCP', isActive: true },
-  {  project_name: 'Workflow', isActive: true },
-  {  project_name: 'Diabase', isActive: true  }
+  {  id: 1, project_name: 'Harmonie', isActive: true },
+  {  id: 2, project_name: 'GBCP', isActive: true },
+  {  id: 3, project_name: 'Workflow', isActive: true },
+  {  id: 4, project_name: 'Diabase', isActive: true  }
 ]
 
 import { mapGetters } from "vuex";

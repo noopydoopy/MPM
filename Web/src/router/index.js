@@ -52,7 +52,7 @@ export default new Router({
       component: User
     },
     {
-      path: '/tasklist',
+      path: '/tasklist/:projectId',
       name: 'TaskList',
       component: TaskList
     },
