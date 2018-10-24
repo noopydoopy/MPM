@@ -26,9 +26,12 @@ const getters = {
                 return true;
             }
         }
-        else return false;
+        else
+        {
+            return false;
+        }
     },
-    CanAccessProject:(state) => (projectId) => 
+    canAccessProject:(state) => (projectId) => 
     {
         let result = false;
         if(state.user)
@@ -52,7 +55,6 @@ const getters = {
       return result;
     }
 }
-
 const actions = {
     async getUserProject({ state, commit }) {
         if(state.user)

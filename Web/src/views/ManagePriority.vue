@@ -79,11 +79,7 @@ export default {
 
     mounted() {
         this.$emit('page-change', this.$route.name)
-        console.log(this.userIsAdmin)
-         if(!this.userIsAdmin)
-        {
-            this.$router.push({ path: "/forbidden" });
-        }
+
         this.loadPriority();
     },
     data: function () {

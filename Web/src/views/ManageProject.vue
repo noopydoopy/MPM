@@ -121,15 +121,10 @@ export default {
       if(this.$route.params.projectId != null && this.$route.params.projectId >0)
       {
           this.ProjectId = this.$route.params.projectId;
-          var canAccessProject = this.canAccessProject(this.ProjectId)
-          if(canAccessProject)
-          {
-            this.InitData(this.ProjectId);   
-          }
-          else
-          {
-              this.$router.push({ path: "/forbidden" });
-          }     
+          this.InitData(this.ProjectId);   
+      }
+      else{
+        this.$router.push({ path: "/forbidden" });
       }
      },
   methods:
@@ -188,7 +183,6 @@ export default {
             ProjectManageData: 'manageProjectModule/projectManageData',
             tokenHeader:'authenticationModule/header',
             userLogin:'authenticationModule/user',
-            canAccessProject:'authenticationModule/CanAccessProject'
             })
     },
 

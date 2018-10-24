@@ -58,10 +58,6 @@ export default {
     },
     mounted() {
       this.$emit('page-change', this.$route.name)
-      if(!this.userIsAdmin)
-        {
-            this.$router.push({ path: "/forbidden" });
-        }
       this.loadAllTypeList();
     },
     data()

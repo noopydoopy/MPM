@@ -14,12 +14,30 @@ import store from '@/store/index'
 Vue.use(Router)
 
 const authMiddleware = (to, from, next) => {
+  async function CheckAuthentication() {
+    await store.dispatch["authenticationModule/setAuthenticationStore"];
   let isAdmin = store.getters['authenticationModule/userIsAdmin'];
   if(isAdmin)
     return next()
   else
     return next('/forbidden');
+  } 
+  CheckAuthentication();
 }
+const authMiddlewareProject = (to, from, next) => {
+  async function CheckAuthenticationProject() {
+    await store.dispatch["authenticationModule/setAuthenticationStore"];
+  
+    console.log(to.params.projectId)
+  let canAccessProject = store.getters['authenticationModule/canAccessProject'];
+  if(canAccessProject(to.params.projectId))
+    return next()
+  else
+    return next('/forbidden');
+  } 
+  CheckAuthenticationProject();
+}
+
 
 export default new Router({
   mode: 'history',
@@ -44,7 +62,8 @@ export default new Router({
     {
       path: '/manageproject/:projectId',
       name: 'ManageProject',
-      component: ManageProject
+      component: ManageProject,
+      beforeEnter: authMiddlewareProject
     },
     {
       path: '/user/:mode',
