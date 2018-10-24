@@ -51,13 +51,17 @@
 <script>
 import TypeList from '@/components/Type/TypeList'
 import axios from 'axios';
-
+import { mapGetters } from 'vuex'
 export default {
     components:{
       TypeList
     },
     mounted() {
       this.$emit('page-change', this.$route.name)
+      if(!this.userIsAdmin)
+        {
+            this.$router.push({ path: "/forbidden" });
+        }
       this.loadAllTypeList();
     },
     data()
@@ -71,6 +75,12 @@ export default {
             typeListItems : [],
             apiHost: 'https://localhost:44382'
       }
+    },
+     computed: 
+    {
+        ...mapGetters({
+            userIsAdmin:'authenticationModule/userIsAdmin',
+        })
     },
     methods:{
       loadAllTypeList(){
